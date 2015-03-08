@@ -1,5 +1,5 @@
-defmodule RouterTest do
-  use ExUnit.Case
+defmodule SignUpTest do
+  use PhoenixTokenAuth.Case
   use Plug.Test
   import RouterHelper
   alias PhoenixTokenAuth.TestRouter

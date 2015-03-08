@@ -51,5 +51,7 @@ Inside the controller methods, conn.assigns.authenticated_user_id holds the id o
 config :phoenix_token_auth,
   user_model: MyApp.User, # Ecto model used for authentication
   repo: MyApp.Repo, # Ecto repo
-  crypto_provider Comeonin.Bcrypt # Crypto provider for hashing passwords/tokens. See http://hexdocs.pm/comeonin/
+  crypto_provider: Comeonin.Bcrypt, # Crypto provider for hashing passwords/tokens. See http://hexdocs.pm/comeonin/
+  token_secret: "the_very_secret_token", # Secret string used to sign the authentication token
+  token_validity_in_minutes: 7 * 24 * 60 # Minutes from login until a token expires
 ```

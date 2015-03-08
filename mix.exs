@@ -31,6 +31,8 @@ defmodule PhoenixTokenAuth.Mixfile do
         {:ecto, "~> 0.9.0"},
         {:comeonin, "~> 0.2.4"},
         {:postgrex, "~> 0.8.0"},
+        {:timex, "~> 0.13.0"},
+        {:joken, "~> 0.8.1"},
     ]
   end
 end
