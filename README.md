@@ -9,40 +9,41 @@ Adds token authentication to Phoenix apps using Ecto.
 defmodule MyApp.Router do
   use Phoenix.Router
 
+  pipeline :authenticated do
+    plug PhoenixTokenAuth.Plug
+  end
+
   scope "/api", SttBackend do
     pipe_through :api
 
     PhoenixTokenAuth.mount
   end
+
+  scope "/api" do
+    pipe_through :authenticated
+    pipe_through :api
+
+    resources: messages, MessagesController
+  end
 end
 ```
-this generates:
+This generates routes for sign-up and login and protects the messages resources from unauthenticated access.
+
+The generated routes are:
+
 method | path | description
 ---------------------------
 POST | /api/users | sign up
 POST | /api/session | login, will return a token as JSON
 
+Inside the controller, the authenticates user's id is accessible inside the connections assigns:
 
-
-## Restrict routes to authenticated users
 ```elixir
-defmodule MyApp.Router do
-  use Phoenix.Router
-
-  pipeline :authenticated_api do
-    plug PhoenixTokenAuth.Plug
-  end
-
-  scope "/api" do
-    resources: messages, MessagesController
-  end
-
+def index(conn, _params) do
+  user_id = conn.assigns.authenticated_user.id
+  ...
 end
 ```
-
-This adds resource routes for messages that are only accessible to authenticated users.
-Inside the controller methods, conn.assigns.authenticated_user_id holds the id of the authenticated user.
-
 
 ## Configuration
 
@@ -55,3 +56,9 @@ config :phoenix_token_auth,
   token_secret: "the_very_secret_token", # Secret string used to sign the authentication token
   token_validity_in_minutes: 7 * 24 * 60 # Minutes from login until a token expires
 ```
+
+
+## TODO:
+* Better documentation
+* Email confirmation of accounts
+* Password resetting

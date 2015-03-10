@@ -9,7 +9,7 @@ defmodule LoginTest do
 
   @email "user@example.com"
   @password "secret"
-  @headers %{"Content-Type" => "application/json"}
+  @headers [{"Content-Type", "application/json"}]
 
   test "sign in with unknown email" do
     conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)

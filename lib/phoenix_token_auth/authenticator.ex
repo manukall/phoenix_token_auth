@@ -37,10 +37,6 @@ defmodule PhoenixTokenAuth.Authenticator do
     |> Date.to_secs
   end
 
-  defp token_secret do
-    Application.get_env(:phoenix_token_auth, :token_secret)
-  end
-
   defp token_validity_minutes do
     Application.get_env(:phoenix_token_auth, :token_validity_in_minutes, 7 * 24 * 60)
   end

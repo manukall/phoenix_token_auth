@@ -21,4 +21,8 @@ defmodule PhoenixTokenAuth.Util do
     |> json %{errors: error}
   end
 
+  def token_secret do
+    Application.get_env(:phoenix_token_auth, :token_secret)
+  end
+
 end

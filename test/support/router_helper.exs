@@ -5,6 +5,10 @@ defmodule PhoenixTokenAuth.TestRouter do
     plug :accepts, ~w(json)
   end
 
+  pipeline :authenticated do
+    plug PhoenixTokenAuth.Plug
+  end
+
   scope "/api" do
     pipe_through :api
 
@@ -17,6 +21,7 @@ defmodule RouterHelper do
   import Plug.Test
 
   def call(router, verb, path, params \\ nil, headers \\ []) do
-    router.call(conn(verb, path, params, headers), [])
+    conn = conn(verb, path, params, headers: headers) |> Plug.Conn.fetch_params
+    router.call(conn, router.init([]))
   end
 end

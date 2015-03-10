@@ -7,7 +7,7 @@ defmodule SignUpTest do
 
   @email "user@example.com"
   @password "secret"
-  @headers %{"Content-Type" => "application/json"}
+  @headers [{"Content-Type", "application/json"}]
 
   test "sign up" do
     conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password, email: @email}}, @headers)
