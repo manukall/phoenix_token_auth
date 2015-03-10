@@ -14,6 +14,7 @@ defmodule MyApp.User do
   schema "users" do
     field  :email,                       :string
     field  :hashed_password,             :string
+    field  :hashed_confirmation_token,   :string
   end
 end
 ```

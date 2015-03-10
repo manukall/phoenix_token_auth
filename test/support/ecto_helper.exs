@@ -1,16 +1,9 @@
 #https://github.com/elixir-lang/ecto/blob/master/integration_test/pg/test_helper.exs
 
-# Basic test repo
-alias PhoenixTokenAuth.TestRepo
-Application.put_env(:phoenix_token_auth, TestRepo,
-                    adapter: Ecto.Adapters.Postgres,
-                    url: "ecto://localhost/phoenix_token_auth_test",
-                    size: 1,
-                    max_overflow: 0)
-
 defmodule PhoenixTokenAuth.TestRepo do
   use Ecto.Repo, otp_app: :phoenix_token_auth
 end
+alias PhoenixTokenAuth.TestRepo
 
 defmodule PhoenixTokenAuth.Case do
   use ExUnit.CaseTemplate
@@ -31,8 +24,9 @@ defmodule UsersMigration do
   def change do
     create table(:users) do
       add :email,    :text
-      add :username, :text
       add :hashed_password, :text
+      add :hashed_confirmation_token, :text
+      add :confirmed_at, :datetime
     end
 
     create index(:users, [:email], unique: true)
@@ -51,8 +45,7 @@ defmodule PhoenixTokenAuth.User do
   schema "users" do
     field  :email,                       :string
     field  :hashed_password,             :string
+    field  :hashed_confirmation_token,   :string
+    field  :confirmed_at,                Ecto.DateTime
   end
 end
-
-Application.put_env(:phoenix_token_auth, :user_model, PhoenixTokenAuth.User)
-Application.put_env(:phoenix_token_auth, :repo, PhoenixTokenAuth.TestRepo)

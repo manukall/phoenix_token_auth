@@ -7,7 +7,8 @@ defmodule PhoenixTokenAuth.Authenticator do
     query = from u in user_model, where: u.email == ^email
     user = repo.one query
     case check_password(user, password) do
-      {:ok, user} -> generate_token_for(user)
+      {:ok, user = %{confirmed_at: nil}} -> {:error, :account_not_confirmed}
+      {:ok, _} -> generate_token_for(user)
       error -> error
     end
   end

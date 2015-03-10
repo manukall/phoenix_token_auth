@@ -4,6 +4,7 @@ defmodule LoginTest do
   import RouterHelper
   alias PhoenixTokenAuth.TestRouter
   alias PhoenixTokenAuth.Registrator
+  alias PhoenixTokenAuth.Confirmator
   import PhoenixTokenAuth.Util
 
 
@@ -26,8 +27,19 @@ defmodule LoginTest do
     assert conn.resp_body == Poison.encode!(%{errors: "unknown_email_or_password"})
   end
 
-  test "sign in with correct password" do
+  test "sign in as unconfirmed user" do
+    {_, changeset} = Registrator.changeset(%{email: @email, password: @password})
+    |> Confirmator.sign_up_changeset
+    repo.insert changeset
+
+    conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)
+    assert conn.status == 401
+    assert conn.resp_body == Poison.encode!(%{errors: "account_not_confirmed"})
+  end
+
+  test "sign in as confirmed user" do
     Registrator.changeset(%{email: @email, password: @password})
+    |> Ecto.Changeset.put_change(:confirmed_at, Ecto.DateTime.utc)
     |> repo.insert
 
     conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)

@@ -1,16 +1,38 @@
 defmodule PhoenixTokenAuth.UsersController do
   use Phoenix.Controller
   alias PhoenixTokenAuth.Registrator
+  alias PhoenixTokenAuth.Confirmator
+  alias PhoenixTokenAuth.Authenticator
+  alias PhoenixTokenAuth.Mailer
   import PhoenixTokenAuth.Util
 
   plug :action
 
 
   def create(conn, %{"user" => params}) do
-    changeset = Registrator.changeset(params)
+    {confirmation_token, changeset} = Registrator.changeset(params)
+    |> Confirmator.sign_up_changeset
+
     if changeset.valid? do
-      user = repo.insert(changeset)
-      json conn, :ok
+      case repo.transaction fn ->
+        user = repo.insert(changeset)
+        Mailer.send_welcome_email(user, confirmation_token)
+      end do
+        {:ok, _} -> json conn, :ok
+      end
+    else
+      send_error(conn, Enum.into(changeset.errors, %{}))
+    end
+  end
+
+  def confirm(conn, params = %{"id" => user_id, "confirmation_token" => confirmation_token}) do
+    user = repo.get! user_model, user_id
+    changeset = Confirmator.confirmation_changeset user, params
+
+    if changeset.valid? do
+        repo.update(changeset)
+        {:ok, token} = Authenticator.generate_token_for(user)
+        json conn, %{token: token}
     else
       send_error(conn, Enum.into(changeset.errors, %{}))
     end

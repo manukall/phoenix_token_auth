@@ -33,6 +33,10 @@ defmodule PhoenixTokenAuth.Mixfile do
         {:postgrex, "~> 0.8.0"},
         {:timex, "~> 0.13.0"},
         {:joken, "~> 0.8.1"},
+        {:secure_random, "~> 0.1"},
+        {:mailgun, "~> 0.0.2"},
+        # TESTING
+        {:mock, "~> 0.1.0", only: :test},
     ]
   end
 end
