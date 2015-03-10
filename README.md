@@ -5,6 +5,23 @@ Adds token authentication to Phoenix apps using Ecto.
 
 ## Usage
 
+You need to have a user model with at least the following schema:
+
+```elixir
+defmodule MyApp.User do
+  use Ecto.Model
+
+  schema "users" do
+    field  :email,                       :string
+    field  :hashed_password,             :string
+  end
+end
+```
+
+It doesn't need to be called `User`.
+
+Then add PhoenixTokenAuth to your Phoenix router:
+
 ```elixir
 defmodule MyApp.Router do
   use Phoenix.Router
