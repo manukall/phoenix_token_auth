@@ -26,6 +26,7 @@ Then add PhoenixTokenAuth to your Phoenix router:
 ```elixir
 defmodule MyApp.Router do
   use Phoenix.Router
+  require PhoenixTokenAuth
 
   pipeline :authenticated do
     plug PhoenixTokenAuth.Plug
