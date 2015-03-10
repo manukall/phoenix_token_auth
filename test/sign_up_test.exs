@@ -14,7 +14,7 @@ defmodule SignUpTest do
   @headers [{"Content-Type", "application/json"}]
 
   test "sign up" do
-    with_mock Mailgun.Client, [send_email: fn _, _ -> :ok end] do
+    with_mock Mailgun.Client, [send_email: fn _, _ -> {:ok, "response"} end] do
       conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password, email: @email}}, @headers)
       assert conn.status == 200
       assert conn.resp_body == Poison.encode!("ok")
@@ -30,7 +30,7 @@ defmodule SignUpTest do
       assert Keyword.fetch!(mail, :to) == @email
       assert Keyword.fetch!(mail, :subject) == "Hello " <> @email
       assert Keyword.fetch!(mail, :from) == "myapp@example.com"
-      assert Keyword.fetch!(mail, :body) == "the_emails_body"
+      assert Keyword.fetch!(mail, :text) == "the_emails_body"
     end
   end
 
