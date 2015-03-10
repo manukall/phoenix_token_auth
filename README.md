@@ -81,3 +81,4 @@ config :phoenix_token_auth,
 * Better documentation
 * Email confirmation of accounts
 * Password resetting
+* Validations of email and password (format, length, ...)
