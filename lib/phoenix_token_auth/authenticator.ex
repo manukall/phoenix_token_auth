@@ -3,6 +3,14 @@ defmodule PhoenixTokenAuth.Authenticator do
   import Ecto.Query, only: [from: 2]
   alias Timex.Date
 
+  @doc """
+Tries to authenticate a user with the given email and password.
+
+Returns:
+* {:ok, token} if a confirmed user is found. The token has to be send in the "authorization" header on following requests: "Authorization: Bearer \#{token}"
+* {:error, :account_not_confirmed} if the user was not confirmed before
+* {:error, :unknown_email_of_password} if no matching user was found
+"""
   def authenticate(email, password) do
     query = from u in user_model, where: u.email == ^email
     user = repo.one query
@@ -26,13 +34,18 @@ defmodule PhoenixTokenAuth.Authenticator do
     end
   end
 
+  @doc """
+  Returns {:ok, token}, where "token" is an authentication token for the user.
+  This token encapsulates the users id and is valid for the number of minutes configured in
+  ":phoenix_token_auth, :token_validity_in_minutes"
+  """
   def generate_token_for(user) do
     Map.take(user, [:id])
-    |> Map.merge(%{exp: seconds_till_exp})
+    |> Map.merge(%{exp: token_expiry_secs})
     |> Joken.encode(token_secret)
   end
 
-  defp seconds_till_exp do
+  defp token_expiry_secs do
     Date.now
     |> Date.shift(mins: token_validity_minutes)
     |> Date.to_secs

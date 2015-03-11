@@ -12,8 +12,11 @@ defmodule PhoenixTokenAuth.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [applications: applications(Mix.env)]
   end
+
+  defp applications(:test), do: applications(:all) ++ [:blacksmith]
+  defp applications(_all),  do: [:logger]
 
   # Dependencies can be Hex packages:
   #
@@ -35,8 +38,12 @@ defmodule PhoenixTokenAuth.Mixfile do
         {:joken, "~> 0.8.1"},
         {:secure_random, "~> 0.1"},
         {:mailgun, "~> 0.0.2"},
+        # DEV
+        {:earmark, "~> 0.1", only: :dev},
+        {:ex_doc, "~> 0.7", only: :dev},
         # TESTING
         {:mock, "~> 0.1.0", only: :test},
+        {:blacksmith, git: "git://github.com/batate/blacksmith.git", only: :test},
     ]
   end
 end
