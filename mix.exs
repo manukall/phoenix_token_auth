@@ -1,10 +1,15 @@
 defmodule PhoenixTokenAuth.Mixfile do
   use Mix.Project
 
+  @repo_url "https://github.com/manukall/phoenix_token_auth"
+
   def project do
     [app: :phoenix_token_auth,
      version: "0.0.1",
      elixir: "~> 1.0",
+     package: package,
+     description: description,
+     source_url: @repo_url
      deps: deps]
   end
 
@@ -17,6 +22,22 @@ defmodule PhoenixTokenAuth.Mixfile do
 
   defp applications(:test), do: applications(:all) ++ [:blacksmith]
   defp applications(_all),  do: [:logger]
+
+  defp package do
+    [
+        contributors: ["Manuel Kallenbach"],
+        licenses: ["MIT"],
+        links: %{"GitHub" => @repo_url
+                "Phoenix" => "https://github.com/phoenixframework/phoenix"}
+    ]
+  end
+
+  defp description do
+    """
+    Solution for token auth in Phoenix apps. Provides an api for registration, account confirmation
+    and logging in.
+    """
+  end
 
   # Dependencies can be Hex packages:
   #
