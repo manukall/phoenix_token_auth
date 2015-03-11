@@ -3,8 +3,7 @@ PhoenixTokenAuth
 
 Adds token authentication to Phoenix apps using Ecto.
 
-## Usage
-
+## Setup
 You need to have a user model with at least the following schema:
 
 ```elixir
@@ -18,8 +17,6 @@ defmodule MyApp.User do
   end
 end
 ```
-
-It doesn't need to be called `User`.
 
 Then add PhoenixTokenAuth to your Phoenix router:
 
@@ -53,6 +50,7 @@ The generated routes are:
 method | path | description
 ---------------------------
 POST | /api/users | sign up
+POST | /api/users/:id/confirm | confirm account
 POST | /api/session | login, will return a token as JSON
 
 Inside the controller, the authenticates user's id is accessible inside the connections assigns:
@@ -64,17 +62,49 @@ def index(conn, _params) do
 end
 ```
 
-## Configuration
-
+Now add configuration:
 ```elixir
 # config/config.exs
 config :phoenix_token_auth,
-  user_model: MyApp.User, # Ecto model used for authentication
-  repo: MyApp.Repo, # Ecto repo
-  crypto_provider: Comeonin.Bcrypt, # Crypto provider for hashing passwords/tokens. See http://hexdocs.pm/comeonin/
-  token_secret: "the_very_secret_token", # Secret string used to sign the authentication token
-  token_validity_in_minutes: 7 * 24 * 60 # Minutes from login until a token expires
+  user_model: Myapp.User,                                                    # ecto model used for authentication
+  repo: Myapp.Repo,                                                          # ecto repo
+  crypto_provider: Comeonin.Bcrypt,                                          # crypto provider for hashing passwords/tokens. see http://hexdocs.pm/comeonin/
+  token_secret: "the_very_secret_token",                                     # secret string used to sign the authentication token
+  token_validity_in_minutes: 7 * 24 * 60                                     # minutes from login until a token expires
+  email_sender: "myapp@example.com",                                         # sender address of emails sent by the app
+  welcome_email_subject: fn user -> "Hello #{user.email}" end,               # function returning the subject of a welcome email
+  welcome_email_body: fn user, confirmation_token -> confirmation_token end, # function returning the body of a welcome email
+  mailgun_domain: "example.com"                                              # domain of your mailgun account
+  mailgun_key: "secret"                                                      # secret key of your mailgun account
 ```
+
+
+## Usage
+
+### Signing up / Registering a new user
+POST request to /api/users.
+Body should be JSON encoded `{user: {email: "user@example.com", password: "secret"}}`.
+This will send an email containing the confirmation token.
+
+### Confirming a user
+POST request to /api/users/:id/confirm
+Body should be JSON encoded `{confirmation_token: "token form the email"}`
+This will mark the user as confirmed and return an authentication token as JSON: `{token: "the_token"}`.
+
+### Logging in
+POST request to /api/sessions
+Body should be JSON encoded `{email: "user@example.com", password: "secret"}`
+Will return an authentication token as JSON: `{token: "the_token"}`
+
+### Requesting a protected resource
+Add a header with key `Authorization` and value `Bearer #{token}` to the request.
+`#{token}` is the token from either account confirmation or logging in.
+
+### Logging out
+Logging out is completely client side. Just stop sending the `Authorization` header.
+
+
+
 
 
 ## TODO:
