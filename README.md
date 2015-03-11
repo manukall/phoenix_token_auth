@@ -29,7 +29,7 @@ defmodule MyApp.Router do
     plug PhoenixTokenAuth.Plug
   end
 
-  scope "/api", SttBackend do
+  scope "/api" do
     pipe_through :api
 
     PhoenixTokenAuth.mount
@@ -48,12 +48,12 @@ This generates routes for sign-up and login and protects the messages resources 
 The generated routes are:
 
 method | path | description
----------------------------
+-------|------|------------
 POST | /api/users | sign up
 POST | /api/users/:id/confirm | confirm account
 POST | /api/session | login, will return a token as JSON
 
-Inside the controller, the authenticates user's id is accessible inside the connections assigns:
+Inside the controller, the authenticated user's id is accessible inside the connections assigns:
 
 ```elixir
 def index(conn, _params) do
