@@ -4,6 +4,14 @@ defmodule PhoenixTokenAuth.Plug do
 
   @behaviour Plug
 
+  @moduledoc """
+  Plug that protects routes from unauthenticated access.
+  If a header with name "authorization" and value "Bearer \#{token}"
+  is present, and "token" can be decoded with the applications token secret,
+  the user is authenticated and the decoded token is assigned to the connection
+  under the key "authenticated_user".
+  """
+
   def init(opts) do
     opts
   end
