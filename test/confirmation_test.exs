@@ -15,7 +15,7 @@ defmodule ConfirmationTest do
 
 
   test "confirm user with wrong token" do
-    {token, changeset} = Registrator.changeset(%{email: @email, password: @password})
+    {_, changeset} = Registrator.changeset(%{email: @email, password: @password})
     |> Confirmator.sign_up_changeset
     user = repo.insert changeset
 

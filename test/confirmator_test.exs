@@ -3,7 +3,6 @@ defmodule ConfirmatorTest do
   import Mock
   import PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.Confirmator
-  alias PhoenixTokenAuth.TestRepo
 
 
   test "sign_up_changeset adds the hashed token" do
