@@ -1,6 +1,16 @@
 defmodule PhoenixTokenAuth.Mailer do
   require Logger
 
+  @moduledoc """
+Responsible for sending mails.
+Configuration options:
+
+    config :phoenix_token_auth,
+      email_sender: "myapp@example.com",
+      mailgun_domain: "example.com",
+      mailgun_key: "secret"
+"""
+
   use Mailgun.Client, domain: Application.get_env(:phoenix_token_auth, :mailgun_domain),
                       key: Application.get_env(:phoenix_token_auth, :mailgun_key),
                       mode: Application.get_env(:phoenix_token_auth, :mailgun_mode),
@@ -9,6 +19,13 @@ defmodule PhoenixTokenAuth.Mailer do
 
   @from Application.get_env(:phoenix_token_auth, :email_sender)
 
+  @doc """
+  Sends a welcome mail to the user.
+
+  Subject and body can be configured in :phoenix_token_auth, :welcome_email_subject and :welcome_email_body.
+  Both config fields have to be functions returning binaries. welcome_email_subject receives the user and
+  welcome_email_body the user and confirmation token.
+  """
   def send_welcome_email(user, confirmation_token) do
     subject = Application.get_env(:phoenix_token_auth, :welcome_email_subject).(user)
     body = Application.get_env(:phoenix_token_auth, :welcome_email_body).(user, confirmation_token)
