@@ -2,6 +2,11 @@ defmodule PhoenixTokenAuth.Confirmator do
   alias Ecto.Changeset
   import PhoenixTokenAuth.Util
 
+  @doc """
+  Adds the changes needed for user confirmation to the given changeset.
+
+  Returns {unhashed_confirmation_token, changeset}
+  """
   def sign_up_changeset(changeset) do
     {confirmation_token, hashed_confirmation_token} = generate_token
 
@@ -11,11 +16,20 @@ defmodule PhoenixTokenAuth.Confirmator do
     {confirmation_token, changeset}
   end
 
+  @doc """
+  Generates a random token.
+  Returns {token, hashed_token}.
+  """
   defp generate_token do
     token = SecureRandom.urlsafe_base64(64)
     {token, crypto_provider.hashpwsalt(token)}
   end
 
+  @doc """
+  Returns a changeset which, when applied, confirms the user.
+  If params["confirmation_token"] does not match, an error is added
+  to the changeset.
+  """
   def confirmation_changeset(user, params) do
     Changeset.cast(user, params, [])
     |> Changeset.put_change(:hashed_confirmation_token, nil)
