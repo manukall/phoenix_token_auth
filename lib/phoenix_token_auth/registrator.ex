@@ -2,6 +2,10 @@ defmodule PhoenixTokenAuth.Registrator do
   alias Ecto.Changeset
   import PhoenixTokenAuth.Util
 
+  @doc """
+  Returns a changeset setting email and hashed_password on a new user.
+  Validates that email and password are present and that email is unique.
+  """
   def changeset(params) do
     Changeset.cast(struct(user_model), params, ~w(email))
     |> set_hashed_password
