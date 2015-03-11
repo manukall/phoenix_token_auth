@@ -9,7 +9,7 @@ defmodule PhoenixTokenAuth.Mixfile do
      elixir: "~> 1.0",
      package: package,
      description: description,
-     source_url: @repo_url
+     source_url: @repo_url,
      deps: deps]
   end
 
@@ -27,7 +27,7 @@ defmodule PhoenixTokenAuth.Mixfile do
     [
         contributors: ["Manuel Kallenbach"],
         licenses: ["MIT"],
-        links: %{"GitHub" => @repo_url
+        links: %{"GitHub" => @repo_url,
                 "Phoenix" => "https://github.com/phoenixframework/phoenix"}
     ]
   end
