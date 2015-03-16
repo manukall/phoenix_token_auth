@@ -4,6 +4,8 @@ config :phoenix_token_auth,
   email_sender: "myapp@example.com",
   welcome_email_subject: fn user -> "Hello #{user.email}" end,
   welcome_email_body: fn user, token -> "the_emails_body" end,
+  password_reset_email_subject: fn user -> "Hello #{user.email}" end,
+  password_reset_email_body: fn user, token -> "the_emails_body" end,
   user_model: PhoenixTokenAuth.User,
   repo: PhoenixTokenAuth.TestRepo
 

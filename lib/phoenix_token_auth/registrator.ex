@@ -14,13 +14,13 @@ defmodule PhoenixTokenAuth.Registrator do
   end
 
 
-  defp set_hashed_password(changeset = %{params: %{"password" => password}}) when password != "" and password != nil do
+  def set_hashed_password(changeset = %{params: %{"password" => password}}) when password != "" and password != nil do
     hashed_password = crypto_provider.hashpwsalt(password)
 
     changeset
     |> Changeset.put_change(:hashed_password, hashed_password)
   end
-  defp set_hashed_password(changeset) do
+  def set_hashed_password(changeset) do
     changeset
     |> Changeset.add_error(:password, :required)
   end
