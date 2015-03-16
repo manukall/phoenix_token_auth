@@ -3,6 +3,8 @@ PhoenixTokenAuth
 
 Adds token authentication to Phoenix apps using Ecto.
 
+An example app is available at https://github.com/manukall/phoenix_token_auth_react.
+
 ## Setup
 You need to have a user model with at least the following schema:
 
@@ -14,6 +16,7 @@ defmodule MyApp.User do
     field  :email,                       :string
     field  :hashed_password,             :string
     field  :hashed_confirmation_token,   :string
+    field  :confirmed_at,                Ecto.DateTime
   end
 end
 ```
@@ -109,6 +112,5 @@ Logging out is completely client side. Just stop sending the `Authorization` hea
 
 ## TODO:
 * Better documentation
-* Email confirmation of accounts
 * Password resetting
 * Validations of email and password (format, length, ...)
