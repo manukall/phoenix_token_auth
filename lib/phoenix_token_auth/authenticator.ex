@@ -1,6 +1,5 @@
 defmodule PhoenixTokenAuth.Authenticator do
   import PhoenixTokenAuth.Util
-  import Ecto.Query, only: [from: 2]
   alias Timex.Date
 
   @doc """
@@ -12,8 +11,7 @@ Returns:
 * {:error, :unknown_email_of_password} if no matching user was found
 """
   def authenticate(email, password) do
-    query = from u in user_model, where: u.email == ^email
-    user = repo.one query
+    user = find_user_by_email(email)
     case check_password(user, password) do
       {:ok, user = %{confirmed_at: nil}} -> {:error, :account_not_confirmed}
       {:ok, _} -> generate_token_for(user)

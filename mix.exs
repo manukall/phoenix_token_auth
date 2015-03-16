@@ -5,7 +5,7 @@ defmodule PhoenixTokenAuth.Mixfile do
 
   def project do
     [app: :phoenix_token_auth,
-     version: "0.0.3",
+     version: "0.0.4",
      elixir: "~> 1.0",
      package: package,
      description: description,

@@ -27,6 +27,7 @@ defmodule UsersMigration do
       add :hashed_password, :text
       add :hashed_confirmation_token, :text
       add :confirmed_at, :datetime
+      add :hashed_password_reset_token, :text
     end
 
     create index(:users, [:email], unique: true)
@@ -47,5 +48,6 @@ defmodule PhoenixTokenAuth.User do
     field  :hashed_password,             :string
     field  :hashed_confirmation_token,   :string
     field  :confirmed_at,                Ecto.DateTime
+    field  :hashed_password_reset_token, :string
   end
 end

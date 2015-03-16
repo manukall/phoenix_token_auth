@@ -37,4 +37,24 @@ Configuration options:
     Logger.info "Sent welcome email to #{user.email}"
   end
 
+  @doc """
+  Sends an email with instructions on how to reset the password to the user.
+
+  Subject and body can be configured in :phoenix_token_auth, :password_reset_email_subject and :password_reset_email_body.
+  Both config fields have to be functions returning binaries. password_reset_email_subject receives the user and
+  password_reset_email_body the user and reset token.
+  """
+  def send_password_reset_email(user, reset_token) do
+    subject = Application.get_env(:phoenix_token_auth, :password_reset_email_subject).(user)
+    body = Application.get_env(:phoenix_token_auth, :password_reset_email_body).(user, reset_token)
+    from = Application.get_env(:phoenix_token_auth, :email_sender)
+
+    {:ok, _} = send_email(to: user.email,
+               from: from,
+               subject: subject,
+               text: body)
+
+    Logger.info "Sent password_reset email to #{user.email}"
+  end
+
 end
