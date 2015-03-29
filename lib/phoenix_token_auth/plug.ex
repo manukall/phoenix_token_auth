@@ -1,6 +1,6 @@
 defmodule PhoenixTokenAuth.Plug do
   import Plug.Conn
-  import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.Util
 
   @behaviour Plug
 
@@ -24,7 +24,7 @@ defmodule PhoenixTokenAuth.Plug do
   end
 
   defp check_token(["Bearer " <> token]) do
-    Joken.decode(token, token_secret)
+    Joken.decode(token, Util.token_secret)
   end
   defp check_token(_), do: {:error, "Not authorized"}
 

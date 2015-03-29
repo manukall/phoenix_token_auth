@@ -13,6 +13,12 @@ defmodule SignUpTest do
   @password "secret"
   @headers [{"Content-Type", "application/json"}]
 
+  setup do
+    on_exit fn ->
+      Application.delete_env :phoenix_token_auth, :registration_validator
+    end
+  end
+
   test "sign up" do
     with_mock Mailgun.Client, [send_email: fn _, _ -> {:ok, "response"} end] do
       conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password, email: @email}}, @headers)
@@ -52,5 +58,18 @@ defmodule SignUpTest do
     |> Dict.fetch!("errors")
 
     assert errors["password"] == "required"
+  end
+
+  test "sign up with custom validations" do
+    Application.put_env(:phoenix_token_auth, :registration_validator, fn changeset ->
+      Ecto.Changeset.add_error(changeset, :password, :too_short)
+    end)
+    conn = call(TestRouter, :post, "/api/users", %{user: %{email: @email, password: @password}}, @headers)
+    assert conn.status == 422
+
+    errors = Poison.decode!(conn.resp_body)
+    |> Dict.fetch!("errors")
+
+    assert errors["password"] == "too_short"
   end
 end

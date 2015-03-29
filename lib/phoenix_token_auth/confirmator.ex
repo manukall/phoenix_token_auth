@@ -1,6 +1,6 @@
 defmodule PhoenixTokenAuth.Confirmator do
   alias Ecto.Changeset
-  import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.Util
 
   @doc """
   Adds the changes needed for user confirmation to the given changeset.
@@ -22,7 +22,7 @@ defmodule PhoenixTokenAuth.Confirmator do
   """
   defp generate_token do
     token = SecureRandom.urlsafe_base64(64)
-    {token, crypto_provider.hashpwsalt(token)}
+    {token, Util.crypto_provider.hashpwsalt(token)}
   end
 
   @doc """
@@ -38,7 +38,7 @@ defmodule PhoenixTokenAuth.Confirmator do
   end
 
   defp validate_token(changeset) do
-    token_matches = crypto_provider.checkpw(changeset.params["confirmation_token"],
+    token_matches = Util.crypto_provider.checkpw(changeset.params["confirmation_token"],
                                             changeset.model.hashed_confirmation_token)
     do_validate_token token_matches, changeset
   end

@@ -30,4 +30,13 @@ defmodule PhoenixTokenAuth.Util do
     query = from u in user_model, where: u.email == ^email
     repo.one query
   end
+
+  def registration_validator(changeset) do
+    apply_registration_validator(Application.get_env(:phoenix_token_auth, :registration_validator),
+                                 changeset)
+  end
+  defp apply_registration_validator(nil, changeset), do: changeset
+  defp apply_registration_validator(validator, changeset) do
+    validator.(changeset)
+  end
 end

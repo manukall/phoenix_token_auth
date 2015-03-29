@@ -1,6 +1,6 @@
 defmodule PhoenixTokenAuth.SessionsController do
   use Phoenix.Controller
-  import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.Authenticator
 
   plug :action
@@ -17,7 +17,7 @@ Responds with status 401 and {errors: error_message} otherwise.
   def create(conn, %{"email" => email, "password" => password}) do
     case Authenticator.authenticate(email, password) do
       {:ok, token} -> json conn, %{token: token}
-      {:error, message} -> send_error(conn, [message], 401)
+      {:error, message} -> Util.send_error(conn, [message], 401)
     end
   end
 end

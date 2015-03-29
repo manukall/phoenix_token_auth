@@ -1,6 +1,6 @@
 defmodule PhoenixTokenAuth.PasswordResetter do
   alias Ecto.Changeset
-  import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.Registrator
 
   @doc """
@@ -9,7 +9,7 @@ defmodule PhoenixTokenAuth.PasswordResetter do
   Returns {unhashed_password_reset_token, changeset}
   """
   def create_changeset(nil) do
-    changeset = Changeset.cast(struct(user_model), %{}, [])
+    changeset = Changeset.cast(struct(Util.user_model), %{}, [])
     |> Changeset.add_error(:email, :unknown)
     {nil, changeset}
   end
@@ -29,7 +29,7 @@ defmodule PhoenixTokenAuth.PasswordResetter do
   Returns the changeset
   """
   def reset_changeset(nil, _params) do
-    changeset = Changeset.cast(struct(user_model), %{}, [])
+    changeset = Changeset.cast(struct(Util.user_model), %{}, [])
     |> Changeset.add_error(:id, :unknown)
     {nil, changeset}
   end
@@ -46,11 +46,11 @@ defmodule PhoenixTokenAuth.PasswordResetter do
   """
   defp generate_token do
     token = SecureRandom.urlsafe_base64(64)
-    {token, crypto_provider.hashpwsalt(token)}
+    {token, Util.crypto_provider.hashpwsalt(token)}
   end
 
   defp validate_token(changeset) do
-    token_matches = crypto_provider.checkpw(changeset.params["password_reset_token"],
+    token_matches = Util.crypto_provider.checkpw(changeset.params["password_reset_token"],
                                             changeset.model.hashed_password_reset_token)
     do_validate_token token_matches, changeset
   end

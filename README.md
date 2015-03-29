@@ -83,7 +83,8 @@ config :phoenix_token_auth,
   password_reset_email_subject: fn user -> "Hello #{user.email}" end,        # function returning the subject of a welcome email
   password_reset_email_body: fn user, reset_token -> reset_token end,        # function returning the body of a welcome email
   mailgun_domain: "example.com"                                              # domain of your mailgun account
-  mailgun_key: "secret"                                                      # secret key of your mailgun account
+  mailgun_key: "secret",                                                     # secret key of your mailgun account
+  registration_validator: fn changeset -> changeset end                      # function receiving and returning the changeset for registration. This is the place to run custom validations.
 ```
 
 
@@ -126,4 +127,3 @@ config :phoenix_token_auth,
 
 ## TODO:
 * Better documentation
-* Validations of email and password (format, length, ...)

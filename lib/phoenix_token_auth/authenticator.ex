@@ -1,5 +1,5 @@
 defmodule PhoenixTokenAuth.Authenticator do
-  import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.Util
   alias Timex.Date
 
   @doc """
@@ -11,7 +11,7 @@ Returns:
 * {:error, :unknown_email_of_password} if no matching user was found
 """
   def authenticate(email, password) do
-    user = find_user_by_email(email)
+    user = Util.find_user_by_email(email)
     case check_password(user, password) do
       {:ok, user = %{confirmed_at: nil}} -> {:error, :account_not_confirmed}
       {:ok, _} -> generate_token_for(user)
@@ -21,11 +21,11 @@ Returns:
 
   @unknown_password_error_message :unknown_email_or_password
   defp check_password(nil, _) do
-    crypto_provider.dummy_checkpw
+    Util.crypto_provider.dummy_checkpw
     {:error, @unknown_password_error_message}
   end
   defp check_password(user, password) do
-    if crypto_provider.checkpw(password, user.hashed_password) do
+    if Util.crypto_provider.checkpw(password, user.hashed_password) do
       {:ok, user}
     else
       {:error, @unknown_password_error_message}
@@ -40,7 +40,7 @@ Returns:
   def generate_token_for(user) do
     Map.take(user, [:id])
     |> Map.merge(%{exp: token_expiry_secs})
-    |> Joken.encode(token_secret)
+    |> Joken.encode(Util.token_secret)
   end
 
   defp token_expiry_secs do

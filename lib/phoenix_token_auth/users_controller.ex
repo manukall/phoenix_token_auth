@@ -4,7 +4,7 @@ defmodule PhoenixTokenAuth.UsersController do
   alias PhoenixTokenAuth.Confirmator
   alias PhoenixTokenAuth.Authenticator
   alias PhoenixTokenAuth.Mailer
-  import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.Util
 
   plug :action
 
@@ -25,14 +25,14 @@ Responds with status 422 and body {errors: {field: "message"}} otherwise.
     |> Confirmator.sign_up_changeset
 
     if changeset.valid? do
-      case repo.transaction fn ->
-        user = repo.insert(changeset)
+      case Util.repo.transaction fn ->
+        user = Util.repo.insert(changeset)
         Mailer.send_welcome_email(user, confirmation_token)
       end do
         {:ok, _} -> json conn, :ok
       end
     else
-      send_error(conn, Enum.into(changeset.errors, %{}))
+      Util.send_error(conn, Enum.into(changeset.errors, %{}))
     end
   end
 
@@ -48,15 +48,15 @@ Responds with status 200 and body {token: token} if successfull. Use this token 
 Responds with status 422 and body {errors: {field: "message"}} otherwise.
 """
   def confirm(conn, params = %{"id" => user_id, "confirmation_token" => _}) do
-    user = repo.get! user_model, user_id
+    user = Util.repo.get! Util.user_model, user_id
     changeset = Confirmator.confirmation_changeset user, params
 
     if changeset.valid? do
-        repo.update(changeset)
+        Util.repo.update(changeset)
         {:ok, token} = Authenticator.generate_token_for(user)
         json conn, %{token: token}
     else
-      send_error(conn, Enum.into(changeset.errors, %{}))
+      Util.send_error(conn, Enum.into(changeset.errors, %{}))
     end
   end
 end
