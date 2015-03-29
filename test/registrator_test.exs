@@ -13,31 +13,31 @@ defmodule RegistratorTest do
 
   test "changeset validates presence of email" do
     changeset = Registrator.changeset(%{})
-    assert changeset.errors[:email] == :required
+    assert changeset.errors[:email] == "can't be blank"
 
     changeset = Registrator.changeset(%{"email" => ""})
-    assert changeset.errors[:email] == :required
+    assert changeset.errors[:email] == "can't be blank"
 
     changeset = Registrator.changeset(%{"email" => nil})
-    assert changeset.errors[:email] == :required
+    assert changeset.errors[:email] == "can't be blank"
   end
 
   test "changeset validates presence of password" do
     changeset = Registrator.changeset(%{"email" => "user@example.com"})
-    assert changeset.errors[:password] == :required
+    assert changeset.errors[:password] == "can't be blank"
 
     changeset = Registrator.changeset(%{"email" => "user@example.com", "password" => ""})
-    assert changeset.errors[:password] == :required
+    assert changeset.errors[:password] == "can't be blank"
 
     changeset = Registrator.changeset(%{"email" => "user@example.com", "password" => nil})
-    assert changeset.errors[:password] == :required
+    assert changeset.errors[:password] == "can't be blank"
   end
 
   test "changeset validates uniqueness of email" do
     user = Forge.saved_user PhoenixTokenAuth.TestRepo
     changeset = Registrator.changeset(%{"email" => user.email})
 
-    assert changeset.errors[:email] == :unique
+    assert changeset.errors[:email] == "has already been taken"
   end
 
   test "changeset includes the hashed password if valid" do

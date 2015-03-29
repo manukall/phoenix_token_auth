@@ -24,11 +24,11 @@ defmodule PhoenixTokenAuth.Registrator do
   end
   def set_hashed_password(changeset) do
     changeset
-    |> Changeset.add_error(:password, :required)
+    |> Changeset.add_error(:password, "can't be blank")
   end
 
-  defp presence_validator(field, nil), do: [{field, :required}]
-  defp presence_validator(field, ""), do: [{field, :required}]
+  defp presence_validator(field, nil), do: [{field, "can't be blank"}]
+  defp presence_validator(field, ""), do: [{field, "can't be blank"}]
   defp presence_validator(field, _), do: []
 
 end
