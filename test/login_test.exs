@@ -15,7 +15,7 @@ defmodule LoginTest do
   test "sign in with unknown email" do
     conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)
     assert conn.status == 401
-    assert conn.resp_body == Poison.encode!(%{errors: ["unknown_email_or_password"]})
+    assert conn.resp_body == Poison.encode!(%{errors: %{base: "Unknown email or password"}})
   end
 
   test "sign in with wrong password" do
@@ -24,7 +24,7 @@ defmodule LoginTest do
 
     conn = call(TestRouter, :post, "/api/sessions", %{password: "wrong", email: @email}, @headers)
     assert conn.status == 401
-    assert conn.resp_body == Poison.encode!(%{errors: ["unknown_email_or_password"]})
+    assert conn.resp_body == Poison.encode!(%{errors: %{base: "Unknown email or password"}})
   end
 
   test "sign in as unconfirmed user" do
@@ -34,7 +34,7 @@ defmodule LoginTest do
 
     conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)
     assert conn.status == 401
-    assert conn.resp_body == Poison.encode!(%{errors: ["account_not_confirmed"]})
+    assert conn.resp_body == Poison.encode!(%{errors: %{base: "Account not confirmed yet. Please follow the instructions we sent you by email."}})
   end
 
   test "sign in as confirmed user" do

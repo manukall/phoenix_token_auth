@@ -7,28 +7,28 @@ Tries to authenticate a user with the given email and password.
 
 Returns:
 * {:ok, token} if a confirmed user is found. The token has to be send in the "authorization" header on following requests: "Authorization: Bearer \#{token}"
-* {:error, :account_not_confirmed} if the user was not confirmed before
-* {:error, :unknown_email_of_password} if no matching user was found
+* {:error, message} if the user was not confirmed before or no matching user was found
 """
+  @unconfirmed_account_error_message "Account not confirmed yet. Please follow the instructions we sent you by email."
   def authenticate(email, password) do
     user = Util.find_user_by_email(email)
     case check_password(user, password) do
-      {:ok, user = %{confirmed_at: nil}} -> {:error, :account_not_confirmed}
+      {:ok, user = %{confirmed_at: nil}} -> {:error, %{base: @unconfirmed_account_error_message}}
       {:ok, _} -> generate_token_for(user)
       error -> error
     end
   end
 
-  @unknown_password_error_message :unknown_email_or_password
+  @unknown_password_error_message "Unknown email or password"
   defp check_password(nil, _) do
     Util.crypto_provider.dummy_checkpw
-    {:error, @unknown_password_error_message}
+    {:error, %{base: @unknown_password_error_message}}
   end
   defp check_password(user, password) do
     if Util.crypto_provider.checkpw(password, user.hashed_password) do
       {:ok, user}
     else
-      {:error, @unknown_password_error_message}
+      {:error, %{base: @unknown_password_error_message}}
     end
   end
 

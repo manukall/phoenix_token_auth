@@ -10,7 +10,7 @@ defmodule PhoenixTokenAuth.PasswordResetter do
   """
   def create_changeset(nil) do
     changeset = Changeset.cast(struct(Util.user_model), %{}, [])
-    |> Changeset.add_error(:email, :unknown)
+    |> Changeset.add_error(:email, "not known")
     {nil, changeset}
   end
   def create_changeset(user) do
