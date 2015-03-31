@@ -5,8 +5,8 @@ defmodule ConfirmatorTest do
   alias PhoenixTokenAuth.Confirmator
 
 
-  test "sign_up_changeset adds the hashed token" do
-    {token, changeset} = Confirmator.sign_up_changeset(%Ecto.Changeset{})
+  test "confirmation_needed_changeset adds the hashed token" do
+    {token, changeset} = Confirmator.confirmation_needed_changeset(%Ecto.Changeset{})
     hashed_confirmation_token = Ecto.Changeset.get_change(changeset, :hashed_confirmation_token)
 
     assert crypto_provider.checkpw(token, hashed_confirmation_token)
@@ -15,7 +15,7 @@ defmodule ConfirmatorTest do
   test "confirmation_changeset adds an error if the token does not match" do
     {_token, user} = Forge.user(hashed_confirmation_token: "123secret")
     |> Ecto.Changeset.cast(nil, [])
-    |> Confirmator.sign_up_changeset
+    |> Confirmator.confirmation_needed_changeset
     user = Ecto.Changeset.apply(user)
 
     changeset = Confirmator.confirmation_changeset(user, %{"confirmation_token" => "wrong"})
@@ -29,7 +29,7 @@ defmodule ConfirmatorTest do
     with_mock Ecto.DateTime, [:passthrough], [utc: fn -> mocked_date end] do
       {token, user} = Forge.user(hashed_confirmation_token: "123secret")
       |> Ecto.Changeset.cast(nil, [])
-      |> Confirmator.sign_up_changeset
+      |> Confirmator.confirmation_needed_changeset
       user = Ecto.Changeset.apply(user)
 
       changeset = Confirmator.confirmation_changeset(user, %{"confirmation_token" => token})

@@ -2,14 +2,14 @@ defmodule PhoenixTokenAuth.Mailer do
   require Logger
 
   @moduledoc """
-Responsible for sending mails.
-Configuration options:
+  Responsible for sending mails.
+  Configuration options:
 
-    config :phoenix_token_auth,
-      email_sender: "myapp@example.com",
-      mailgun_domain: "example.com",
-      mailgun_key: "secret"
-"""
+      config :phoenix_token_auth,
+        email_sender: "myapp@example.com",
+        mailgun_domain: "example.com",
+        mailgun_key: "secret"
+  """
 
   use Mailgun.Client, domain: Application.get_env(:phoenix_token_auth, :mailgun_domain),
                       key: Application.get_env(:phoenix_token_auth, :mailgun_key),
@@ -55,6 +55,26 @@ Configuration options:
                text: body)
 
     Logger.info "Sent password_reset email to #{user.email}"
+  end
+
+  @doc """
+  Sends an email with instructions on how to confirm a new email address to the user.
+
+  Subject and body can be configured in :phoenix_token_auth, :new_email_address_email_subject and :new_email_address_email_body.
+  Both config fields have to be functions returning binaries. new_email_address_email_subject receives the user and
+  new_email_address_email_body the user and confirmation token.
+  """
+  def send_new_email_address_email(user, confirmation_token) do
+    subject = Application.get_env(:phoenix_token_auth, :new_email_address_email_subject).(user)
+    body = Application.get_env(:phoenix_token_auth, :new_email_address_email_body).(user, confirmation_token)
+    from = Application.get_env(:phoenix_token_auth, :email_sender)
+
+    {:ok, _} = send_email(to: user.unconfirmed_email,
+               from: from,
+               subject: subject,
+               text: body)
+
+    Logger.info "Sent new email address email to #{user.unconfirmed_email}"
   end
 
 end

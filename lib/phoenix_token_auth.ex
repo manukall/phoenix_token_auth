@@ -7,6 +7,8 @@ defmodule PhoenixTokenAuth do
       post  "sessions",              PhoenixTokenAuth.SessionsController, :create
       post  "password_resets",       PhoenixTokenAuth.PasswordResetsController, :create
       post  "password_resets/reset", PhoenixTokenAuth.PasswordResetsController, :reset
+      get   "account",               PhoenixTokenAuth.AccountController, :show
+      put   "account",               PhoenixTokenAuth.AccountController, :update
     end
   end
 

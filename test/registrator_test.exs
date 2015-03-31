@@ -5,7 +5,7 @@ defmodule RegistratorTest do
 
   setup do
     on_exit fn ->
-      Application.delete_env :phoenix_token_auth, :registration_validator
+      Application.delete_env :phoenix_token_auth, :user_model_validator
     end
   end
 
@@ -60,8 +60,8 @@ defmodule RegistratorTest do
     assert changeset.valid?
   end
 
-  test "changeset runs registration_validator from config" do
-    Application.put_env(:phoenix_token_auth, :registration_validator, fn changeset ->
+  test "changeset runs user_model_validator from config" do
+    Application.put_env(:phoenix_token_auth, :user_model_validator, fn changeset ->
       Ecto.Changeset.add_error(changeset, :email, :custom_error)
     end)
     changeset = Registrator.changeset(@valid_params)

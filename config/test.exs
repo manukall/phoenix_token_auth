@@ -6,6 +6,8 @@ config :phoenix_token_auth,
   welcome_email_body: fn user, token -> "the_emails_body" end,
   password_reset_email_subject: fn user -> "Hello #{user.email}" end,
   password_reset_email_body: fn user, token -> "the_emails_body" end,
+  new_email_address_email_subject: fn user -> "Please confirm your email address" end,
+  new_email_address_email_body: fn user, token -> token end,
   user_model: PhoenixTokenAuth.User,
   repo: PhoenixTokenAuth.TestRepo
 

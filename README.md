@@ -18,6 +18,7 @@ defmodule MyApp.User do
     field  :hashed_confirmation_token,   :string
     field  :confirmed_at,                Ecto.DateTime
     field  :hashed_password_reset_token, :string
+    field  :unconfirmed_email,           :string
   end
 end
 ```
@@ -58,6 +59,8 @@ POST | /api/users/:id/confirm | confirm account
 POST | /api/session | login, will return a token as JSON
 POST | /api/password_resets | request a reset-password-email
 POST | /api/password_resets/reset | reset a password
+GET  | /api/account               | get information about the current user. at the moment this includes only the email address
+PUT  | /api/account               | update the current users email or password
 
 Inside the controller, the authenticated user's id is accessible inside the connections assigns:
 
@@ -72,19 +75,21 @@ Now add configuration:
 ```elixir
 # config/config.exs
 config :phoenix_token_auth,
-  user_model: Myapp.User,                                                    # ecto model used for authentication
-  repo: Myapp.Repo,                                                          # ecto repo
-  crypto_provider: Comeonin.Bcrypt,                                          # crypto provider for hashing passwords/tokens. see http://hexdocs.pm/comeonin/
-  token_secret: "the_very_secret_token",                                     # secret string used to sign the authentication token
-  token_validity_in_minutes: 7 * 24 * 60                                     # minutes from login until a token expires
-  email_sender: "myapp@example.com",                                         # sender address of emails sent by the app
-  welcome_email_subject: fn user -> "Hello #{user.email}" end,               # function returning the subject of a welcome email
-  welcome_email_body: fn user, confirmation_token -> confirmation_token end, # function returning the body of a welcome email
-  password_reset_email_subject: fn user -> "Hello #{user.email}" end,        # function returning the subject of a welcome email
-  password_reset_email_body: fn user, reset_token -> reset_token end,        # function returning the body of a welcome email
-  mailgun_domain: "example.com"                                              # domain of your mailgun account
-  mailgun_key: "secret",                                                     # secret key of your mailgun account
-  registration_validator: fn changeset -> changeset end                      # function receiving and returning the changeset for registration. This is the place to run custom validations.
+  user_model: Myapp.User,                                                              # ecto model used for authentication
+  repo: Myapp.Repo,                                                                    # ecto repo
+  crypto_provider: Comeonin.Bcrypt,                                                    # crypto provider for hashing passwords/tokens. see http://hexdocs.pm/comeonin/
+  token_secret: "the_very_secret_token",                                               # secret string used to sign the authentication token
+  token_validity_in_minutes: 7 * 24 * 60                                               # minutes from login until a token expires
+  email_sender: "myapp@example.com",                                                   # sender address of emails sent by the app
+  welcome_email_subject: fn user -> "Hello #{user.email}" end,                         # function returning the subject of a welcome email
+  welcome_email_body: fn user, confirmation_token -> confirmation_token end,           # function returning the body of a welcome email
+  password_reset_email_subject: fn user -> "Hello #{user.email}" end,                  # function returning the subject of a welcome email
+  password_reset_email_body: fn user, reset_token -> reset_token end,                  # function returning the body of a welcome email
+  new_email_address_email_subject: fn user -> "Hello #{user.email}" end,               # function returning the subject of the email sent when the users changes his email address
+  new_email_address_email_body: fn user, confirmation_token -> confirmation_token end, # function returning the body of the email sent when the users changes his email address
+  mailgun_domain: "example.com"                                                        # domain of your mailgun account
+  mailgun_key: "secret",                                                               # secret key of your mailgun account
+  user_model_validator: fn changeset -> changeset end                                  # function receiving and returning the changeset for a user on registration and when updating the account. This is the place to run custom validations.
 ```
 
 
@@ -119,6 +124,16 @@ config :phoenix_token_auth,
 * Once the reset token is received in the email, make a POST request to /api/password_resets/reset with body
 `{user_id: 123, password_reset_token: "the_token_from_the_email", password: "the_new_password"}`
 * This will change the users password and return an authentication token as JSON: `{token: "the_token"}`.
+
+### Change the current user's password
+* PUT request to /api/account
+* Body should be JSON encoded `{account: {password: "newpassword"}}`
+
+### Change the current user's email address
+* PUT request to /api/account
+* Body should be JSON encoded `{account: {email: "new_email@example.com"}}`
+* This will send an email containing the confirmation token.
+* The change will only be effective after the email address was confirmed.
 
 
 

@@ -3,11 +3,11 @@ defmodule PhoenixTokenAuth.Confirmator do
   alias PhoenixTokenAuth.Util
 
   @doc """
-  Adds the changes needed for user confirmation to the given changeset.
+  Adds the changes needed for a user's email confirmation to the given changeset.
 
   Returns {unhashed_confirmation_token, changeset}
   """
-  def sign_up_changeset(changeset) do
+  def confirmation_needed_changeset(changeset) do
     {confirmation_token, hashed_confirmation_token} = generate_token
 
     changeset = changeset
@@ -30,10 +30,17 @@ defmodule PhoenixTokenAuth.Confirmator do
   If params["confirmation_token"] does not match, an error is added
   to the changeset.
   """
-  def confirmation_changeset(user, params) do
+  def confirmation_changeset(user = %{confirmed_at: nil}, params) do
     Changeset.cast(user, params, [])
     |> Changeset.put_change(:hashed_confirmation_token, nil)
     |> Changeset.put_change(:confirmed_at, Ecto.DateTime.utc)
+    |> validate_token
+  end
+  def confirmation_changeset(user = %{unconfirmed_email: unconfirmed_email}, params) when unconfirmed_email != nil do
+    Changeset.cast(user, params, [])
+    |> Changeset.put_change(:hashed_confirmation_token, nil)
+    |> Changeset.put_change(:unconfirmed_email, nil)
+    |> Changeset.put_change(:email, unconfirmed_email)
     |> validate_token
   end
 

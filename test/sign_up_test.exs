@@ -15,7 +15,7 @@ defmodule SignUpTest do
 
   setup do
     on_exit fn ->
-      Application.delete_env :phoenix_token_auth, :registration_validator
+      Application.delete_env :phoenix_token_auth, :user_model_validator
     end
   end
 
@@ -61,7 +61,7 @@ defmodule SignUpTest do
   end
 
   test "sign up with custom validations" do
-    Application.put_env(:phoenix_token_auth, :registration_validator, fn changeset ->
+    Application.put_env(:phoenix_token_auth, :user_model_validator, fn changeset ->
       Ecto.Changeset.add_error(changeset, :password, :too_short)
     end)
     conn = call(TestRouter, :post, "/api/users", %{user: %{email: @email, password: @password}}, @headers)

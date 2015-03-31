@@ -10,19 +10,19 @@ defmodule PhoenixTokenAuth.UsersController do
 
 
   @doc """
-Sign up as a new user.
+  Sign up as a new user.
 
-Params should be:
-    {user: {email: "user@example.com", password: "secret"}}
+  Params should be:
+      {user: {email: "user@example.com", password: "secret"}}
 
-If successfull, sends a welcome email.
+  If successfull, sends a welcome email.
 
-Responds with status 200 and body "ok" if successfull.
-Responds with status 422 and body {errors: {field: "message"}} otherwise.
-"""
+  Responds with status 200 and body "ok" if successfull.
+  Responds with status 422 and body {errors: {field: "message"}} otherwise.
+  """
   def create(conn, %{"user" => params}) do
     {confirmation_token, changeset} = Registrator.changeset(params)
-    |> Confirmator.sign_up_changeset
+    |> Confirmator.confirmation_needed_changeset
 
     if changeset.valid? do
       case Util.repo.transaction fn ->
@@ -37,16 +37,16 @@ Responds with status 422 and body {errors: {field: "message"}} otherwise.
   end
 
   @doc """
-Confirm an existing user.
+  Confirm either a new user or an existing user's new email address.
 
-Parameter "id" should be the user's id.
-Parameter "confirmation" should be the user's confirmation token.
+  Parameter "id" should be the user's id.
+  Parameter "confirmation" should be the user's confirmation token.
 
-If the confirmation matches, the user will be confirmed and signed in.
+  If the confirmation matches, the user will be confirmed and signed in.
 
-Responds with status 200 and body {token: token} if successfull. Use this token in subsequent requests as authentication.
-Responds with status 422 and body {errors: {field: "message"}} otherwise.
-"""
+  Responds with status 200 and body {token: token} if successfull. Use this token in subsequent requests as authentication.
+  Responds with status 422 and body {errors: {field: "message"}} otherwise.
+  """
   def confirm(conn, params = %{"id" => user_id, "confirmation_token" => _}) do
     user = Util.repo.get! Util.user_model, user_id
     changeset = Confirmator.confirmation_changeset user, params

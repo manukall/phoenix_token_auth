@@ -31,12 +31,16 @@ defmodule PhoenixTokenAuth.Util do
     repo.one query
   end
 
-  def registration_validator(changeset) do
-    apply_registration_validator(Application.get_env(:phoenix_token_auth, :registration_validator),
+  def user_model_validator(changeset) do
+    apply_user_model_validator(Application.get_env(:phoenix_token_auth, :user_model_validator),
                                  changeset)
   end
-  defp apply_registration_validator(nil, changeset), do: changeset
-  defp apply_registration_validator(validator, changeset) do
+  defp apply_user_model_validator(nil, changeset), do: changeset
+  defp apply_user_model_validator(validator, changeset) do
     validator.(changeset)
   end
+
+  def presence_validator(field, nil), do: [{field, "can't be blank"}]
+  def presence_validator(field, ""), do: [{field, "can't be blank"}]
+  def presence_validator(field, _), do: []
 end
