@@ -57,6 +57,18 @@ defmodule UpdateAccountTest do
     end
   end
 
+  test "set email to the same email it was before", context do
+    with_mock Mailgun.Client, [send_email: fn _, _ -> {:ok, "response"} end] do
+      conn = call(TestRouter, :put, "/api/account", %{account: %{email: @old_email}}, context.headers)
+      assert conn.status == 200
+      assert conn.resp_body == Poison.encode!("ok")
+      {:ok, _} = Authenticator.authenticate(@old_email, @old_password)
+      assert TestRepo.one(User).unconfirmed_email == nil
+
+      assert :meck.num_calls(Mailgun.Client, :send_email, :_, 2) == 0
+    end
+  end
+
   test "update account with custom validations", context do
     with_mock Mailgun.Client, [send_email: fn _, _ -> {:ok, "response"} end] do
       Application.put_env(:phoenix_token_auth, :user_model_validator, fn changeset ->

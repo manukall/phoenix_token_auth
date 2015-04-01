@@ -14,7 +14,8 @@ defmodule PhoenixTokenAuth.AccountUpdater do
     |> apply_email_change
   end
 
-  def apply_email_change(changeset = %{params: %{"email" => email}}) when email != "" and email != nil do
+  def apply_email_change(changeset = %{params: %{"email" => email}, model: %{email: email_before}})
+    when email != "" and email != nil and email != email_before do
     {confirmation_token, changeset} = changeset
     |> Changeset.put_change(:unconfirmed_email, email)
     |> Confirmator.confirmation_needed_changeset
