@@ -9,6 +9,7 @@ defmodule ConfirmationTest do
   alias PhoenixTokenAuth.TestRepo
   alias PhoenixTokenAuth.User
   import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.UserHelper
 
 
   @email "user@example.com"
@@ -41,7 +42,7 @@ defmodule ConfirmationTest do
 
     assert token_data.id == user.id
 
-    user = repo.get! user_model, user.id
+    user = repo.get! UserHelper.model, user.id
     assert user.hashed_confirmation_token == nil
     assert user.confirmed_at != nil
   end
@@ -66,7 +67,7 @@ defmodule ConfirmationTest do
 
     assert token_data.id == user.id
 
-    user = repo.get! user_model, user.id
+    user = repo.get! UserHelper.model, user.id
     assert user.hashed_confirmation_token == nil
     assert user.unconfirmed_email == nil
     assert user.email == "new@example.com"

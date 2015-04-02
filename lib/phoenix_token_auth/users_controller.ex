@@ -5,6 +5,7 @@ defmodule PhoenixTokenAuth.UsersController do
   alias PhoenixTokenAuth.Authenticator
   alias PhoenixTokenAuth.Mailer
   alias PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.UserHelper
 
   plug :action
 
@@ -48,12 +49,12 @@ defmodule PhoenixTokenAuth.UsersController do
   Responds with status 422 and body {errors: {field: "message"}} otherwise.
   """
   def confirm(conn, params = %{"id" => user_id, "confirmation_token" => _}) do
-    user = Util.repo.get! Util.user_model, user_id
+    user = Util.repo.get! UserHelper.model, user_id
     changeset = Confirmator.confirmation_changeset user, params
 
     if changeset.valid? do
         Util.repo.update(changeset)
-        {:ok, token} = Authenticator.generate_token_for(user)
+        token = Authenticator.generate_token_for(user)
         json conn, %{token: token}
     else
       Util.send_error(conn, Enum.into(changeset.errors, %{}))

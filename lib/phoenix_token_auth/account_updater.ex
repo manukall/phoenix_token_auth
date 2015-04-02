@@ -1,6 +1,7 @@
 defmodule PhoenixTokenAuth.AccountUpdater do
   alias Ecto.Changeset
   alias PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.UserHelper
   alias PhoenixTokenAuth.Confirmator
 
   @doc """
@@ -9,7 +10,7 @@ defmodule PhoenixTokenAuth.AccountUpdater do
   """
   def changeset(user, params) do
     changeset = Changeset.cast(user, params, ~w())
-    |> Util.user_model_validator
+    |> UserHelper.validator
     |> apply_password_change
     |> apply_email_change
   end

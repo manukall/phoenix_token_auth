@@ -1,6 +1,7 @@
 defmodule PhoenixTokenAuth.Authenticator do
   alias PhoenixTokenAuth.Util
   alias Timex.Date
+  alias PhoenixTokenAuth.UserHelper
 
   @doc """
 Tries to authenticate a user with the given email and password.
@@ -11,10 +12,10 @@ Returns:
 """
   @unconfirmed_account_error_message "Account not confirmed yet. Please follow the instructions we sent you by email."
   def authenticate(email, password) do
-    user = Util.find_user_by_email(email)
+    user = UserHelper.find_by_email(email)
     case check_password(user, password) do
       {:ok, user = %{confirmed_at: nil}} -> {:error, %{base: @unconfirmed_account_error_message}}
-      {:ok, _} -> generate_token_for(user)
+      {:ok, _} -> {:ok, generate_token_for(user)}
       error -> error
     end
   end
@@ -38,9 +39,11 @@ Returns:
   ":phoenix_token_auth, :token_validity_in_minutes"
   """
   def generate_token_for(user) do
-    Map.take(user, [:id])
+    {:ok, token} = Map.take(user, [:id])
     |> Map.merge(%{exp: token_expiry_secs})
     |> Joken.encode(Util.token_secret)
+    UserHelper.persist_token(user, token)
+    token
   end
 
   defp token_expiry_secs do

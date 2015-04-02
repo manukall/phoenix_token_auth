@@ -4,6 +4,7 @@ defmodule PhoenixTokenAuth.PasswordResetsController do
   alias PhoenixTokenAuth.Mailer
   alias PhoenixTokenAuth.Authenticator
   alias PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.UserHelper
 
   plug :action
 
@@ -20,7 +21,7 @@ defmodule PhoenixTokenAuth.PasswordResetsController do
   Responds with status 422 and body {errors: [messages]} otherwise.
   """
   def create(conn, %{"email" => email}) do
-    user = Util.find_user_by_email(email)
+    user = UserHelper.find_by_email(email)
     {password_reset_token, changeset} = PasswordResetter.create_changeset(user)
 
     if changeset.valid? do
@@ -45,12 +46,12 @@ defmodule PhoenixTokenAuth.PasswordResetsController do
   Responds with status 422 and body {errors: [messages]} otherwise.
   """
   def reset(conn, params = %{"user_id" => user_id}) do
-    user = Util.repo.get(Util.user_model, user_id)
+    user = Util.repo.get(UserHelper.model, user_id)
     changeset = PasswordResetter.reset_changeset(user, params)
 
     if changeset.valid? do
       user = Util.repo.update(changeset)
-      {:ok, token} = Authenticator.generate_token_for(user)
+      token = Authenticator.generate_token_for(user)
       json conn, %{token: token}
     else
       Util.send_error(conn, Enum.into(changeset.errors, %{}))

@@ -4,6 +4,7 @@ defmodule AuthenticatorTest do
   import PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.TestRepo
   alias PhoenixTokenAuth.Authenticator
+  alias PhoenixTokenAuth.User
 
 
   @email "user@example.com"
@@ -11,7 +12,9 @@ defmodule AuthenticatorTest do
 
   test "authenticate a confirmed user" do
     user = Forge.saved_confirmed_user TestRepo
-    {:ok, _token} = Authenticator.authenticate(user.email, "secret")
+    {:ok, token} = Authenticator.authenticate(user.email, "secret")
+    user = TestRepo.get User, user.id
+    assert user.authentication_tokens == [token]
   end
 
   test "authenticate an unconfirmed user" do
@@ -28,8 +31,8 @@ defmodule AuthenticatorTest do
     mocked_date = Timex.Date.now
     with_mock Timex.Date, [:passthrough], [now: fn -> mocked_date end] do
       Application.put_env(:phoenix_token_auth, :token_validity_in_minutes, 1)
-      user = %{id: 123}
-      {:ok, token} = Authenticator.generate_token_for(user)
+      user = Forge.saved_user TestRepo, %{id: 123}
+      token = Authenticator.generate_token_for(user)
       {:ok, decoded_token} = Joken.decode(token, token_secret)
 
       expected_exp = mocked_date

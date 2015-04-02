@@ -2,6 +2,7 @@ defmodule PhoenixTokenAuth.PasswordResetter do
   alias Ecto.Changeset
   alias PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.Registrator
+  alias PhoenixTokenAuth.UserHelper
 
   @doc """
   Adds the changes needed to create a password reset token.
@@ -9,7 +10,7 @@ defmodule PhoenixTokenAuth.PasswordResetter do
   Returns {unhashed_password_reset_token, changeset}
   """
   def create_changeset(nil) do
-    changeset = Changeset.cast(struct(Util.user_model), %{}, [])
+    changeset = Changeset.cast(struct(UserHelper.model), %{}, [])
     |> Changeset.add_error(:email, "not known")
     {nil, changeset}
   end
@@ -29,7 +30,7 @@ defmodule PhoenixTokenAuth.PasswordResetter do
   Returns the changeset
   """
   def reset_changeset(nil, _params) do
-    changeset = Changeset.cast(struct(Util.user_model), %{}, [])
+    changeset = Changeset.cast(struct(UserHelper.model), %{}, [])
     |> Changeset.add_error(:id, :unknown)
     {nil, changeset}
   end

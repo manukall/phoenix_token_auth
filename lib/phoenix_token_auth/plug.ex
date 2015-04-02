@@ -1,6 +1,7 @@
 defmodule PhoenixTokenAuth.Plug do
   import Plug.Conn
   alias PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.UserHelper
 
   @behaviour Plug
 
@@ -25,7 +26,21 @@ defmodule PhoenixTokenAuth.Plug do
 
   defp check_token(["Bearer " <> token]) do
     Joken.decode(token, Util.token_secret)
+    |> check_whether_token_is_known(token)
   end
   defp check_token(_), do: {:error, "Not authorized"}
+
+  defp check_whether_token_is_known({:ok, token_data}, token) do
+    import Ecto.Query, only: [from: 2]
+    query = from u in UserHelper.model,
+     where: u.id == ^token_data.id and
+       fragment("? @> ?", u.authentication_tokens, ^[token])
+
+    case Util.repo.one(query) do
+      nil -> {:error, :unknown_token}
+      user -> {:ok, user}
+    end
+  end
+  defp check_whether_token_is_known({:error, message}, _), do: {:error, message}
 
 end

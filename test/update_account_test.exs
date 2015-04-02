@@ -20,7 +20,7 @@ defmodule UpdateAccountTest do
     user = TestRepo.insert(%User{email: @old_email,
                                  confirmed_at: Ecto.DateTime.utc,
                                  hashed_password: Util.crypto_provider.hashpwsalt(@old_password)})
-    {:ok, token} = Authenticator.generate_token_for(user)
+    token = Authenticator.generate_token_for(user)
     headers = [{"authorization", "Bearer " <> token} | @headers]
 
     on_exit fn ->

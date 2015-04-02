@@ -3,10 +3,6 @@ defmodule PhoenixTokenAuth.Util do
   import Phoenix.Controller
   import Ecto.Query, only: [from: 2]
 
-  def user_model do
-    Application.get_env(:phoenix_token_auth, :user_model)
-  end
-
   def repo do
     Application.get_env(:phoenix_token_auth, :repo)
   end
@@ -24,20 +20,6 @@ defmodule PhoenixTokenAuth.Util do
 
   def token_secret do
     Application.get_env(:phoenix_token_auth, :token_secret)
-  end
-
-  def find_user_by_email(email) do
-    query = from u in user_model, where: u.email == ^email
-    repo.one query
-  end
-
-  def user_model_validator(changeset) do
-    apply_user_model_validator(Application.get_env(:phoenix_token_auth, :user_model_validator),
-                                 changeset)
-  end
-  defp apply_user_model_validator(nil, changeset), do: changeset
-  defp apply_user_model_validator(validator, changeset) do
-    validator.(changeset)
   end
 
   def presence_validator(field, nil), do: [{field, "can't be blank"}]
