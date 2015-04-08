@@ -39,11 +39,20 @@ Returns:
   ":phoenix_token_auth, :token_validity_in_minutes"
   """
   def generate_token_for(user) do
-    {:ok, token} = Map.take(user, [:id])
-    |> Map.merge(%{exp: token_expiry_secs})
-    |> Joken.encode(Util.token_secret)
+    token = generate_unique_token_for(user)
     UserHelper.persist_token(user, token)
     token
+  end
+  defp generate_unique_token_for(user) do
+    {:ok, token} = Map.take(user, [:id])
+    |> Map.merge(%{exp: token_expiry_secs})
+    |> Map.merge(%{token_id: SecureRandom.base64(24)})
+    |> Joken.encode(Util.token_secret)
+    if Enum.member?(user.authentication_tokens, token) do
+      generate_unique_token_for(user)
+    else
+      token
+    end
   end
 
   defp token_expiry_secs do

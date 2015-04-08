@@ -41,7 +41,15 @@ defmodule AuthenticatorTest do
 
       assert decoded_token.id == 123
       assert decoded_token.exp == expected_exp
+      assert TestRepo.get(User, user.id).authentication_tokens == [token]
     end
+  end
+
+  test "generate_token_for adds a new, different token, if one already exists" do
+    Forge.saved_user TestRepo
+    token_1  = Authenticator.generate_token_for(TestRepo.one(User))
+    token_2  = Authenticator.generate_token_for(TestRepo.one(User))
+    assert TestRepo.one(User).authentication_tokens == [token_2, token_1]
   end
 
 

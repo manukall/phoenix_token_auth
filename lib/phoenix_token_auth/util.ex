@@ -25,4 +25,12 @@ defmodule PhoenixTokenAuth.Util do
   def presence_validator(field, nil), do: [{field, "can't be blank"}]
   def presence_validator(field, ""), do: [{field, "can't be blank"}]
   def presence_validator(field, _), do: []
+
+  def token_from_conn(conn) do
+    Plug.Conn.get_req_header(conn, "authorization")
+    |> token_from_header
+  end
+  defp token_from_header(["Bearer " <> token]), do: {:ok, token}
+  defp token_from_header(_), do: {:error, :not_present}
+
 end

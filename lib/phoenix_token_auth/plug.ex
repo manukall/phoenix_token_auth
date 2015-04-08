@@ -18,13 +18,13 @@ defmodule PhoenixTokenAuth.Plug do
   end
 
   def call(conn, _opts) do
-    case check_token(get_req_header(conn, "authorization")) do
+    case check_token(Util.token_from_conn(conn)) do
       {:ok, data} -> assign(conn, :authenticated_user, data)
       {:error, message} -> send_resp(conn, 401, Poison.encode!(%{error: message})) |> halt
     end
   end
 
-  defp check_token(["Bearer " <> token]) do
+  defp check_token({:ok, token}) do
     Joken.decode(token, Util.token_secret)
     |> check_whether_token_is_known(token)
   end
