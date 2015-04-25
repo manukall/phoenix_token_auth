@@ -7,6 +7,7 @@ defmodule ResetPasswordTest do
   alias PhoenixTokenAuth.Registrator
   alias PhoenixTokenAuth.PasswordResetter
   import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.UserHelper
 
 
   @email "user@example.com"
@@ -28,7 +29,7 @@ defmodule ResetPasswordTest do
       assert conn.status == 200
       assert Poison.decode!(conn.resp_body) == "ok"
 
-      user = repo.one user_model
+      user = repo.one UserHelper.model
       assert user.hashed_password_reset_token != nil
     end
   end

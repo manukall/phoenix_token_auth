@@ -2,6 +2,7 @@ defmodule PhoenixTokenAuth.AccountController do
   use Phoenix.Controller
   alias PhoenixTokenAuth.Mailer
   alias PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.UserHelper
   alias PhoenixTokenAuth.AccountUpdater
 
   plug PhoenixTokenAuth.Plug
@@ -45,7 +46,7 @@ defmodule PhoenixTokenAuth.AccountController do
   end
 
   defp current_user(conn) do
-    Util.repo.get(Util.user_model, conn.assigns.authenticated_user.id)
+    Util.repo.get(UserHelper.model, conn.assigns.authenticated_user.id)
   end
 
 end

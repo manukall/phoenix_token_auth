@@ -4,6 +4,9 @@ defmodule PlugTest do
   import RouterHelper
   alias PhoenixTokenAuth.Router
   import PhoenixTokenAuth.Util
+  alias PhoenixTokenAuth.TestRepo
+  alias PhoenixTokenAuth.User
+  alias PhoenixTokenAuth.Authenticator
 
   defmodule SecretsController do
     use Phoenix.Controller
@@ -41,11 +44,21 @@ defmodule PlugTest do
     assert conn.status == 401
   end
 
-  test "request a protected resource with valid authentication token" do
+  test "request a protected resource with valid but unknown authentication token" do
     {:ok, valid_token} = Joken.encode(%{id: 123}, token_secret)
     conn = call(Router, :get, "/api/secrets", nil,  [{"authorization", "Bearer #{valid_token}"}])
+    assert conn.status == 401
+  end
+
+  test "request a protected resource with valid and known authentication token" do
+    user = Forge.saved_user TestRepo
+    valid_token = Authenticator.generate_token_for(user)
+    Authenticator.generate_token_for(TestRepo.get!(User, user.id))
+    Authenticator.generate_token_for(TestRepo.get!(User, user.id))
+
+    conn = call(Router, :get, "/api/secrets", nil,  [{"authorization", "Bearer #{valid_token}"}])
     assert conn.status == 200
-    assert conn.resp_body == "{\"user_id\":123}"
+    assert conn.resp_body == "{\"user_id\":#{user.id}}"
   end
 
 

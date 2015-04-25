@@ -19,6 +19,7 @@ defmodule MyApp.User do
     field  :confirmed_at,                Ecto.DateTime
     field  :hashed_password_reset_token, :string
     field  :unconfirmed_email,           :string
+    field  :authentication_tokens,       {:array, :string}, default: []
   end
 end
 ```
@@ -57,12 +58,13 @@ method | path | description
 POST | /api/users | sign up
 POST | /api/users/:id/confirm | confirm account
 POST | /api/session | login, will return a token as JSON
+DELETE |  /api/session | logout, invalidated the users current authentication token
 POST | /api/password_resets | request a reset-password-email
 POST | /api/password_resets/reset | reset a password
 GET  | /api/account               | get information about the current user. at the moment this includes only the email address
 PUT  | /api/account               | update the current users email or password
 
-Inside the controller, the authenticated user's id is accessible inside the connections assigns:
+Inside the controller, the authenticated user is accessible inside the connections assigns:
 
 ```elixir
 def index(conn, _params) do
@@ -115,7 +117,8 @@ config :phoenix_token_auth,
 * `#{token}` is the token from either account confirmation or logging in.
 
 ### Logging out
-* Logging out is completely client side. Just stop sending the `Authorization` header.
+* DELETE request to /api/sessions
+* Just stop sending the `Authorization` header.
 
 ### Resetting password
 * POST request to /api/password_resets
@@ -142,3 +145,5 @@ config :phoenix_token_auth,
 
 ## TODO:
 * Better documentation
+
+* clean up expired authentication tokens in the db
