@@ -16,7 +16,7 @@ defmodule ConfirmatorTest do
     {_token, user} = Forge.user(hashed_confirmation_token: "123secret")
     |> Ecto.Changeset.cast(nil, [])
     |> Confirmator.confirmation_needed_changeset
-    user = Ecto.Changeset.apply(user)
+    user = Ecto.Changeset.apply_changes(user)
 
     changeset = Confirmator.confirmation_changeset(user, %{"confirmation_token" => "wrong"})
 
@@ -30,7 +30,7 @@ defmodule ConfirmatorTest do
       {token, user} = Forge.user(hashed_confirmation_token: "123secret")
       |> Ecto.Changeset.cast(nil, [])
       |> Confirmator.confirmation_needed_changeset
-      user = Ecto.Changeset.apply(user)
+      user = Ecto.Changeset.apply_changes(user)
 
       changeset = Confirmator.confirmation_changeset(user, %{"confirmation_token" => token})
 
