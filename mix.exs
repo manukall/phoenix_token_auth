@@ -5,7 +5,7 @@ defmodule PhoenixTokenAuth.Mixfile do
 
   def project do
     [app: :phoenix_token_auth,
-     version: "0.0.7",
+     version: "0.0.7-kal",
      elixir: "~> 1.0",
      package: package,
      description: description,
@@ -51,9 +51,9 @@ defmodule PhoenixTokenAuth.Mixfile do
   defp deps do
     [
         {:cowboy, "~> 1.0.0"},
-        {:phoenix, ">= 0.7.0"},
-        {:ecto, "~> 0.10.0"},
-        {:comeonin, "~> 0.2.4"},
+        {:phoenix, ">= 0.12.0"},
+        {:ecto, "~> 0.11.0"},
+        {:comeonin, "~> 0.7"},
         {:postgrex, ">= 0.6.0"},
         {:timex, "~> 0.13.0"},
         {:joken, "~> 0.8.1"},
