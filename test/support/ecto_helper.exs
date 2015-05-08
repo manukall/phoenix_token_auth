@@ -37,7 +37,7 @@ defmodule UsersMigration do
 end
 
 # Load up the repository, start it, and run migrations
-:ok = Ecto.Storage.down(TestRepo)
+Ecto.Storage.down(TestRepo)
 :ok = Ecto.Storage.up(TestRepo)
 {:ok, _pid} = TestRepo.start_link
 :ok = Ecto.Migrator.up(TestRepo, 0, UsersMigration, log: false)
