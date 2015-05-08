@@ -21,7 +21,11 @@ defmodule RouterHelper do
   import Plug.Test
 
   def call(router, verb, path, params \\ nil, headers \\ []) do
-    conn = conn(verb, path, params, headers: headers) |> Plug.Conn.fetch_params
+    conn = conn(verb, path, params)
+    conn = Enum.reduce(headers, conn, fn ({name, value}, conn) ->
+      Plug.Test.put_req_header(conn, name, value)
+    end)
+    conn = Plug.Conn.fetch_query_params(conn)
     router.call(conn, router.init([]))
   end
 end

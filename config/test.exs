@@ -16,3 +16,6 @@ config :phoenix_token_auth, PhoenixTokenAuth.TestRepo,
   url: "ecto://localhost/phoenix_token_auth_test",
   size: 1,
   max_overflow: 0
+
+
+config :logger, level: :warn
