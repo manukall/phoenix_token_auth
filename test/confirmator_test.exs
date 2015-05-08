@@ -6,7 +6,7 @@ defmodule ConfirmatorTest do
 
 
   test "confirmation_needed_changeset adds the hashed token" do
-    {token, changeset} = %Ecto.Changeset{} 
+    {token, changeset} = %Ecto.Changeset{}
       |> Ecto.Changeset.cast(:empty, [], [])
       |> Confirmator.confirmation_needed_changeset()
     hashed_confirmation_token = Ecto.Changeset.get_change(changeset, :hashed_confirmation_token)
@@ -16,7 +16,7 @@ defmodule ConfirmatorTest do
 
   test "confirmation_changeset adds an error if the token does not match" do
     {_token, user} = Forge.user(hashed_confirmation_token: "123secret")
-    |> Ecto.Changeset.cast(nil, [])
+    |> Ecto.Changeset.cast(:empty, [])
     |> Confirmator.confirmation_needed_changeset
     user = Ecto.Changeset.apply_changes(user)
 
@@ -30,7 +30,7 @@ defmodule ConfirmatorTest do
     mocked_date = Ecto.DateTime.utc
     with_mock Ecto.DateTime, [:passthrough], [utc: fn -> mocked_date end] do
       {token, user} = Forge.user(hashed_confirmation_token: "123secret")
-      |> Ecto.Changeset.cast(nil, [])
+      |> Ecto.Changeset.cast(:empty, [])
       |> Confirmator.confirmation_needed_changeset
       user = Ecto.Changeset.apply_changes(user)
 
