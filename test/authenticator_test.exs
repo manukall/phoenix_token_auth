@@ -1,7 +1,6 @@
 defmodule AuthenticatorTest do
   use PhoenixTokenAuth.Case
   import Mock
-  import PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.TestRepo
   alias PhoenixTokenAuth.Authenticator
   alias PhoenixTokenAuth.User
@@ -33,7 +32,7 @@ defmodule AuthenticatorTest do
       Application.put_env(:phoenix_token_auth, :token_validity_in_minutes, 1)
       user = Forge.saved_user TestRepo, %{id: 123}
       token = Authenticator.generate_token_for(user)
-      {:ok, decoded_token} = Joken.decode(token, token_secret)
+      {:ok, decoded_token} = Joken.decode(token)
 
       expected_exp = mocked_date
       |> Timex.Date.shift(mins: 1)
