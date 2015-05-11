@@ -1,6 +1,6 @@
 defmodule PhoenixTokenAuth.PoisonHelper do
 	alias Poison, as: JSON
-	@behaviour Joken.Json
+	@behaviour Joken.Codec
 
 	def encode(map) do
 	  JSON.encode!(map)
