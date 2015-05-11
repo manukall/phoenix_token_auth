@@ -25,7 +25,7 @@ defmodule PhoenixTokenAuth.Plug do
   end
 
   defp check_token({:ok, token}) do
-    Joken.decode(token, Util.token_secret)
+    Joken.decode(token)
     |> check_whether_token_is_known(token)
   end
   defp check_token(_), do: {:error, "Not authorized"}

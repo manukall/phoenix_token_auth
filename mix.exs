@@ -55,8 +55,8 @@ defmodule PhoenixTokenAuth.Mixfile do
         {:ecto, "~> 0.11.0"},
         {:comeonin, "~> 0.7"},
         {:postgrex, ">= 0.6.0"},
-        {:timex, "~> 0.13.0"},
-        {:joken, "~> 0.8.1"},
+        {:joken, "~> 0.13.0"},
+        {:poison, "~> 1.4.0"},
         {:secure_random, "~> 0.1"},
         {:mailgun, "~> 0.0.2"},
         # DEV
@@ -65,6 +65,7 @@ defmodule PhoenixTokenAuth.Mixfile do
         # TESTING
         {:mock, "~> 0.1.0", only: :test},
         {:blacksmith, git: "git://github.com/batate/blacksmith.git", only: :test},
+        {:timex, "~> 0.13.0"},
     ]
   end
 end

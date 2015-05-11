@@ -80,7 +80,6 @@ config :phoenix_token_auth,
   user_model: Myapp.User,                                                              # ecto model used for authentication
   repo: Myapp.Repo,                                                                    # ecto repo
   crypto_provider: Comeonin.Bcrypt,                                                    # crypto provider for hashing passwords/tokens. see http://hexdocs.pm/comeonin/
-  token_secret: "the_very_secret_token",                                               # secret string used to sign the authentication token
   token_validity_in_minutes: 7 * 24 * 60                                               # minutes from login until a token expires
   email_sender: "myapp@example.com",                                                   # sender address of emails sent by the app
   welcome_email_subject: fn user -> "Hello #{user.email}" end,                         # function returning the subject of a welcome email
@@ -94,6 +93,15 @@ config :phoenix_token_auth,
   user_model_validator: fn changeset -> changeset end                                  # function receiving and returning the changeset for a user on registration and when updating the account. This is the place to run custom validations.
 ```
 
+The secret token must be configured via Joken. You must also configure the JSON encoder. 
+For using the Poison Encode, we provide the `PhoenixTokenAuth.PoisonHelper`, which needs
+to also to be configured for Joken.
+```elixir
+# config/config.exs
+config :joken,
+  secret_key: "very secrect test key",
+  json_module: PhoenixTokenAuth.PoisonHelper
+```
 
 ## Usage
 

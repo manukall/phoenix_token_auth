@@ -12,6 +12,8 @@ config :phoenix_token_auth,
   repo: PhoenixTokenAuth.TestRepo
 
 config :phoenix_token_auth, PhoenixTokenAuth.TestRepo,
+  username: "postgres",
+  password: "postgres",
   adapter: Ecto.Adapters.Postgres,
   url: "ecto://localhost/phoenix_token_auth_test",
   size: 1,
@@ -19,3 +21,8 @@ config :phoenix_token_auth, PhoenixTokenAuth.TestRepo,
 
 
 config :logger, level: :warn
+
+# Setting configuration for the Joken library
+config :joken, 
+  secret_key: "very secrect test keys",
+  json_module: PhoenixTokenAuth.PoisonHelper

@@ -39,13 +39,18 @@ defmodule PlugTest do
   end
 
   test "request a protected resource with invalid authentication token" do
-    {:ok, invalid_token} = Joken.encode(%{id: 123}, "invalid_secret")
+    # {:ok, invalid_token} = Joken.encode(%{id: 123}) # , "invalid_secret")
+    json_module = Application.get_env(:joken, :json_module)
+    algorithm   = Application.get_env(:joken, :algorithm, :HS256)
+    claims      = %{}
+    {:ok, invalid_token} = Joken.Token.encode("invalid_secret", 
+      json_module, %{id: 123}, algorithm, claims) 
     conn = call(Router, :get, "/api/secrets", nil,  [{"authorization", "Bearer #{invalid_token}"}])
     assert conn.status == 401
   end
 
   test "request a protected resource with valid but unknown authentication token" do
-    {:ok, valid_token} = Joken.encode(%{id: 123}, token_secret)
+    {:ok, valid_token} = Joken.encode(%{id: 123})
     conn = call(Router, :get, "/api/secrets", nil,  [{"authorization", "Bearer #{valid_token}"}])
     assert conn.status == 401
   end
