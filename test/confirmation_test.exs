@@ -38,7 +38,7 @@ defmodule ConfirmationTest do
 
     {:ok, token_data} = Poison.decode!(conn.resp_body)
     |> Dict.fetch!("token")
-    |> Joken.decode(token_secret)
+    |> Joken.decode()# token_secret)
 
     assert token_data.id == user.id
 
@@ -63,7 +63,7 @@ defmodule ConfirmationTest do
 
     {:ok, token_data} = Poison.decode!(conn.resp_body)
     |> Dict.fetch!("token")
-    |> Joken.decode(token_secret)
+    |> Joken.decode()
 
     assert token_data.id == user.id
 
