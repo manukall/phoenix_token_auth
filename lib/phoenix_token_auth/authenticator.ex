@@ -47,7 +47,7 @@ Returns:
     {:ok, token} = Map.take(user, [:id])
     |> Map.merge(%{exp: token_expiry_secs})
     |> Map.merge(%{token_id: SecureRandom.base64(24)})
-    |> Joken.encode(Util.token_secret)
+    |> Joken.encode()
     if Enum.member?(user.authentication_tokens, token) do
       generate_unique_token_for(user)
     else
