@@ -16,10 +16,8 @@ defmodule PhoenixTokenAuth.Confirmator do
     {confirmation_token, changeset}
   end
 
-  @doc """
-  Generates a random token.
-  Returns {token, hashed_token}.
-  """
+  # Generates a random token.
+  # Returns {token, hashed_token}.
   defp generate_token do
     token = SecureRandom.urlsafe_base64(64)
     {token, Util.crypto_provider.hashpwsalt(token)}
