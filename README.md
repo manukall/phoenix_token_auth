@@ -93,13 +93,13 @@ config :phoenix_token_auth,
   user_model_validator: fn changeset -> changeset end                                  # function receiving and returning the changeset for a user on registration and when updating the account. This is the place to run custom validations.
 ```
 
-The secret token must be configured via Joken. You must also configure the JSON encoder. 
+The secret token must be configured via Joken. You must also configure the JSON encoder.
 For using the Poison Encode, we provide the `PhoenixTokenAuth.PoisonHelper`, which needs
 to also to be configured for Joken.
 ```elixir
 # config/config.exs
 config :joken,
-  secret_key: "very secrect test key",
+  secret_key: "very secret test key",
   json_module: PhoenixTokenAuth.PoisonHelper
 ```
 
