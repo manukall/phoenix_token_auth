@@ -10,15 +10,10 @@ defmodule PhoenixTokenAuth.Util do
     Application.get_env(:phoenix_token_auth, :crypto_provider, Comeonin.Bcrypt)
   end
 
-
   def send_error(conn, error, status \\ 422) do
     conn
     |> put_status(status)
     |> json %{errors: error}
-  end
-
-  def token_secret do
-    Application.get_env(:phoenix_token_auth, :token_secret)
   end
 
   def presence_validator(field, nil), do: [{field, "can't be blank"}]
