@@ -65,7 +65,7 @@ defmodule PhoenixTokenAuth.Mixfile do
         # TESTING
         {:mock, "~> 0.1.0", only: :test},
         {:blacksmith, git: "git://github.com/batate/blacksmith.git", only: :test},
-        {:timex, "~> 0.13.0"},
+        {:timex, "~> 0.13.0", only: :test}
     ]
   end
 end
