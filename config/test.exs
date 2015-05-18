@@ -19,10 +19,8 @@ config :phoenix_token_auth, PhoenixTokenAuth.TestRepo,
   size: 1,
   max_overflow: 0
 
-
 config :logger, level: :warn
 
 # Setting configuration for the Joken library
-config :joken, 
-  secret_key: "very secrect test keys",
-  json_module: PhoenixTokenAuth.PoisonHelper
+config :joken,
+  secret_key: "very secret test key"

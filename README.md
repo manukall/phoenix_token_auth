@@ -93,14 +93,22 @@ config :phoenix_token_auth,
   user_model_validator: fn changeset -> changeset end                                  # function receiving and returning the changeset for a user on registration and when updating the account. This is the place to run custom validations.
 ```
 
-The secret token must be configured via Joken. You must also configure the JSON encoder. 
-For using the Poison Encode, we provide the `PhoenixTokenAuth.PoisonHelper`, which needs
-to also to be configured for Joken.
+The secret key for signing tokens must be provided for Joken to work. You must
+also configure the JSON encoder for Joken to use. For using the Poison Encode function,
+we provide the `PhoenixTokenAuth.PoisonHelper`. The secret_key should be set per
+environment and should not be committed to the repository.
 ```elixir
 # config/config.exs
 config :joken,
-  secret_key: "very secrect test key",
-  json_module: PhoenixTokenAuth.PoisonHelper
+  json_module: PhoenixTokenAuth.PoisonHelper,
+  algorithm: :HS256 # Optional. defaults to :HS256
+```
+```elixir
+# config/[dev|test|prod].exs
+config :joken,
+  # Environment specific secret key for signing tokens.
+  # This should be a very long random string.
+  secret_key: "very secret test key",
 ```
 
 ## Usage
@@ -147,11 +155,10 @@ config :joken,
 * The change will only be effective after the email address was confirmed.
 
 
-
-
-
-
 ## TODO:
 * Better documentation
-
-* clean up expired authentication tokens in the db
+* Clean up expired authentication tokens in the db
+* Merge the Joken secret_key config into the phoenix_token_auth config.
+* Custom work factor config for crypto_provider
+* Allow use of scrypt as an alternate crypto_provider
+* Example Ecto Phoenix migration, with indexes.

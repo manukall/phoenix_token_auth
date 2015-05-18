@@ -3,7 +3,6 @@ defmodule PlugTest do
   use Plug.Test
   import RouterHelper
   alias PhoenixTokenAuth.Router
-  import PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.TestRepo
   alias PhoenixTokenAuth.User
   alias PhoenixTokenAuth.Authenticator
@@ -43,8 +42,8 @@ defmodule PlugTest do
     json_module = Application.get_env(:joken, :json_module)
     algorithm   = Application.get_env(:joken, :algorithm, :HS256)
     claims      = %{}
-    {:ok, invalid_token} = Joken.Token.encode("invalid_secret", 
-      json_module, %{id: 123}, algorithm, claims) 
+    {:ok, invalid_token} = Joken.Token.encode("invalid_secret",
+      json_module, %{id: 123}, algorithm, claims)
     conn = call(Router, :get, "/api/secrets", nil,  [{"authorization", "Bearer #{invalid_token}"}])
     assert conn.status == 401
   end

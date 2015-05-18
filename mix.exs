@@ -53,19 +53,19 @@ defmodule PhoenixTokenAuth.Mixfile do
         {:cowboy, "~> 1.0.0"},
         {:phoenix, ">= 0.12.0"},
         {:ecto, "~> 0.11.0"},
-        {:comeonin, "~> 0.7"},
+        {:comeonin, "~> 0.10"},
         {:postgrex, ">= 0.6.0"},
-        {:joken, "~> 0.13.0"},
-        {:poison, ">= 1.3.0"},
+        {:joken, "~> 0.13.1"},
+        {:poison, "~> 1.3"},
         {:secure_random, "~> 0.1"},
-        {:mailgun, "~> 0.0.2"},
+        {:mailgun, "~> 0.1"},
         # DEV
         {:earmark, "~> 0.1", only: :dev},
         {:ex_doc, "~> 0.7", only: :dev},
         # TESTING
         {:mock, "~> 0.1.0", only: :test},
         {:blacksmith, git: "git://github.com/batate/blacksmith.git", only: :test},
-        {:timex, "~> 0.13.0"},
+        {:timex, "~> 0.13.0", only: :test}
     ]
   end
 end
