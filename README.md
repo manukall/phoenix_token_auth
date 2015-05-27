@@ -82,15 +82,10 @@ config :phoenix_token_auth,
   crypto_provider: Comeonin.Bcrypt,                                                    # crypto provider for hashing passwords/tokens. see http://hexdocs.pm/comeonin/
   token_validity_in_minutes: 7 * 24 * 60                                               # minutes from login until a token expires
   email_sender: "myapp@example.com",                                                   # sender address of emails sent by the app
-  welcome_email_subject: fn user -> "Hello #{user.email}" end,                         # function returning the subject of a welcome email
-  welcome_email_body: fn user, confirmation_token -> confirmation_token end,           # function returning the body of a welcome email
-  password_reset_email_subject: fn user -> "Hello #{user.email}" end,                  # function returning the subject of a welcome email
-  password_reset_email_body: fn user, reset_token -> reset_token end,                  # function returning the body of a welcome email
-  new_email_address_email_subject: fn user -> "Hello #{user.email}" end,               # function returning the subject of the email sent when the users changes his email address
-  new_email_address_email_body: fn user, confirmation_token -> confirmation_token end, # function returning the body of the email sent when the users changes his email address
+  emailing_module: MyApp.EmailConstructor                                              # module implementing the `PhoenixTokenAuth.MailingBehaviour` for generating emails
   mailgun_domain: "example.com"                                                        # domain of your mailgun account
   mailgun_key: "secret",                                                               # secret key of your mailgun account
-  user_model_validator: fn changeset -> changeset end                                  # function receiving and returning the changeset for a user on registration and when updating the account. This is the place to run custom validations.
+  user_model_validator: {MyApp.Model, :user_validator}                                 # function receiving and returning the changeset for a user on registration and when updating the account. This is the place to run custom validations.
 ```
 
 The secret key for signing tokens must be provided for Joken to work. You must
