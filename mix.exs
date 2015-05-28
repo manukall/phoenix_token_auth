@@ -5,7 +5,7 @@ defmodule PhoenixTokenAuth.Mixfile do
 
   def project do
     [app: :phoenix_token_auth,
-     version: "0.0.11",
+     version: "0.0.12",
      elixir: "~> 1.0",
      package: package,
      description: description,
@@ -59,13 +59,13 @@ defmodule PhoenixTokenAuth.Mixfile do
         {:poison, "~> 1.3"},
         {:secure_random, "~> 0.1"},
         {:mailgun, "~> 0.1"},
+        {:timex, "~> 0.13.0"},
         # DEV
         {:earmark, "~> 0.1", only: :dev},
         {:ex_doc, "~> 0.7", only: :dev},
         # TESTING
         {:mock, "~> 0.1.0", only: :test},
         {:blacksmith, git: "git://github.com/batate/blacksmith.git", only: :test},
-        {:timex, "~> 0.13.0", only: :test}
     ]
   end
 end
