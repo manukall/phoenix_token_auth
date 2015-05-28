@@ -26,7 +26,6 @@ defmodule PhoenixTokenAuth.Mailer do
   welcome_email_body the user and confirmation token.
   """
   def send_welcome_email(user, confirmation_token) do
-    email_mod = Application.get_env(:phoenix_token_auth, :emailing_module)
     subject = email_mod.welcome_subject(user)
     body = email_mod.welcome_body(user, confirmation_token)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
@@ -47,7 +46,6 @@ defmodule PhoenixTokenAuth.Mailer do
   password_reset_email_body the user and reset token.
   """
   def send_password_reset_email(user, reset_token) do
-    email_mod = Application.get_env(:phoenix_token_auth, :emailing_module)
     subject = email_mod.password_reset_subject(user)
     body = email_mod.password_reset_body(user, reset_token)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
@@ -68,7 +66,6 @@ defmodule PhoenixTokenAuth.Mailer do
   new_email_address_email_body the user and confirmation token.
   """
   def send_new_email_address_email(user, confirmation_token) do
-    email_mod = Application.get_env(:phoenix_token_auth, :emailing_module)
     subject = email_mod.new_email_address_subject(user)
     body = email_mod.new_email_address_body(user, confirmation_token)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
@@ -79,6 +76,10 @@ defmodule PhoenixTokenAuth.Mailer do
                text: body)
 
     Logger.info "Sent new email address email to #{user.unconfirmed_email}"
+  end
+
+  defp email_mod do
+    Application.get_env(:phoenix_token_auth, :emailing_module)
   end
 
 end
