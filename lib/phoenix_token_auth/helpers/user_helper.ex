@@ -16,6 +16,7 @@ defmodule PhoenixTokenAuth.UserHelper do
                                  changeset)
   end
   defp apply_validator(nil, changeset), do: changeset
+  defp apply_validator({mod, fun}, changeset), do: apply(mod, fun, [changeset])
   defp apply_validator(validator, changeset) do
     validator.(changeset)
   end
