@@ -56,7 +56,7 @@ defmodule PhoenixTokenAuth.Mixfile do
         {:comeonin, "~> 0.10"},
         {:postgrex, ">= 0.6.0"},
         {:joken, "~> 0.13.1"},
-        {:poison, "~> 1.3"},
+        {:poison, "~> 1.3.1"},
         {:secure_random, "~> 0.1"},
         {:mailgun, "~> 0.1"},
         {:timex, "~> 0.13.0"},
