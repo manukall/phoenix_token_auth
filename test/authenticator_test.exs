@@ -11,9 +11,7 @@ defmodule AuthenticatorTest do
 
   test "authenticate a confirmed user" do
     user = Forge.saved_confirmed_user TestRepo
-    {:ok, token} = Authenticator.authenticate(user.email, "secret")
-    user = TestRepo.get User, user.id
-    assert user.authentication_tokens == [token]
+    {:ok, _} = Authenticator.authenticate(user.email, "secret")
   end
 
   test "authenticate an unconfirmed user" do

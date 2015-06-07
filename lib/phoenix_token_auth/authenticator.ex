@@ -15,7 +15,7 @@ Returns:
     user = UserHelper.find_by_email(email)
     case check_password(user, password) do
       {:ok, %{confirmed_at: nil}} -> {:error, %{base: @unconfirmed_account_error_message}}
-      {:ok, _} -> {:ok, generate_token_for(user)}
+      {:ok, _} -> {:ok, user}
       error -> error
     end
   end

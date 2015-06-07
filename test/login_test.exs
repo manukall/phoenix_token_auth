@@ -5,6 +5,7 @@ defmodule LoginTest do
   alias PhoenixTokenAuth.TestRouter
   alias PhoenixTokenAuth.Registrator
   alias PhoenixTokenAuth.Confirmator
+  alias PhoenixTokenAuth.UserHelper
   import PhoenixTokenAuth.Util
 
 
@@ -44,7 +45,9 @@ defmodule LoginTest do
 
     conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)
     assert conn.status == 200
-    assert match?(%{"token" => _}, Poison.decode!(conn.resp_body))
+    %{"token" => token} = Poison.decode!(conn.resp_body)
+
+    assert repo.one(UserHelper.model).authentication_tokens == [token]
   end
 
 end

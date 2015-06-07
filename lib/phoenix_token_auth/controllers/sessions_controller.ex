@@ -17,7 +17,7 @@ defmodule PhoenixTokenAuth.Controllers.Sessions do
   """
   def create(conn, %{"email" => email, "password" => password}) do
     case Authenticator.authenticate(email, password) do
-      {:ok, token} -> json conn, %{token: token}
+      {:ok, user} -> json conn, %{token: Authenticator.generate_token_for(user)}
       {:error, errors} -> Util.send_error(conn, errors, 401)
     end
   end
