@@ -1,4 +1,4 @@
-defmodule PhoenixTokenAuth.AccountController do
+defmodule PhoenixTokenAuth.Controllers.Account do
   use Phoenix.Controller
   alias PhoenixTokenAuth.Mailer
   alias PhoenixTokenAuth.Util

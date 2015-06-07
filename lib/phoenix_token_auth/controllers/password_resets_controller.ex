@@ -1,4 +1,4 @@
-defmodule PhoenixTokenAuth.PasswordResetsController do
+defmodule PhoenixTokenAuth.Controllers.PasswordResets do
   use Phoenix.Controller
   alias PhoenixTokenAuth.PasswordResetter
   alias PhoenixTokenAuth.Mailer

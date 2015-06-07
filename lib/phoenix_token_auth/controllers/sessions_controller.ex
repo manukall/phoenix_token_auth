@@ -1,4 +1,4 @@
-defmodule PhoenixTokenAuth.SessionsController do
+defmodule PhoenixTokenAuth.Controllers.Sessions do
   use Phoenix.Controller
   alias PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.Authenticator

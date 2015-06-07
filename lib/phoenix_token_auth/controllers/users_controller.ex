@@ -1,4 +1,4 @@
-defmodule PhoenixTokenAuth.UsersController do
+defmodule PhoenixTokenAuth.Controllers.Users do
   use Phoenix.Controller
   alias PhoenixTokenAuth.Registrator
   alias PhoenixTokenAuth.Confirmator
