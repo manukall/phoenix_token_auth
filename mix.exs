@@ -6,7 +6,7 @@ defmodule PhoenixTokenAuth.Mixfile do
   def project do
     [app: :phoenix_token_auth,
      version: "0.0.14",
-     elixir: "~> 1.0",
+     elixir: "~> 1.0.4",
      package: package,
      description: description,
      source_url: @repo_url,
@@ -51,20 +51,20 @@ defmodule PhoenixTokenAuth.Mixfile do
   defp deps do
     [
         {:cowboy, "~> 1.0.0"},
-        {:phoenix, ">= 0.12.0"},
-        {:ecto, "~> 0.11.0"},
-        {:comeonin, "~> 0.10.0"},
-        {:postgrex, ">= 0.6.0"},
+        {:phoenix, ">= 0.13.1"},
+        {:ecto, "~> 0.12.0"},
+        {:comeonin, "~> 1.0"},
+        {:postgrex, ">= 0.8.4"},
         {:joken, "~> 0.13.1"},
-        {:poison, "~> 1.3.1"},
-        {:secure_random, "~> 0.1.0"},
-        {:mailgun, "~> 0.1.0"},
-        {:timex, "~> 0.13.0"},
+        {:poison, "~> 1.4.0"},
+        {:secure_random, "~> 0.1.1"},
+        {:mailgun, "~> 0.1.1"},
+        {:timex, "~> 0.14.0"},
         # DEV
-        {:earmark, "~> 0.1.0", only: :dev},
-        {:ex_doc, "~> 0.7.0", only: :dev},
+        {:earmark, "~> 0.1.8", only: :dev},
+        {:ex_doc, "~> 0.7.3", only: :dev},
         # TESTING
-        {:mock, "~> 0.1.0", only: :test},
+        {:mock, "~> 0.1.1", only: :test},
         {:blacksmith, git: "git://github.com/batate/blacksmith.git", only: :test},
     ]
   end
