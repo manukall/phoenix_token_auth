@@ -6,7 +6,6 @@ defmodule PhoenixTokenAuth.AccountController do
   alias PhoenixTokenAuth.AccountUpdater
 
   plug PhoenixTokenAuth.Plug
-  plug :action
 
 
   @doc """

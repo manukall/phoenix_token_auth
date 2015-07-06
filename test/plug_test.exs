@@ -9,7 +9,6 @@ defmodule PlugTest do
 
   defmodule SecretsController do
     use Phoenix.Controller
-    plug :action
 
     def index(conn, _params) do
       json conn, %{user_id: conn.assigns.authenticated_user.id}

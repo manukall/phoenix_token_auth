@@ -4,7 +4,6 @@ defmodule PhoenixTokenAuth.SessionsController do
   alias PhoenixTokenAuth.Authenticator
 
   plug PhoenixTokenAuth.Plug when action in [:delete]
-  plug :action
 
 
   @doc """

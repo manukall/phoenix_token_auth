@@ -7,8 +7,6 @@ defmodule PhoenixTokenAuth.UsersController do
   alias PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.UserHelper
 
-  plug :action
-
 
   @doc """
   Sign up as a new user.
