@@ -32,7 +32,7 @@ defmodule PhoenixTokenAuth.SessionsController do
     |> Util.token_from_conn
     tokens_left_after_delete = conn.assigns.authenticated_user.authentication_tokens
     |> List.delete(token)
-    Util.repo.update %{conn.assigns.authenticated_user | authentication_tokens: tokens_left_after_delete}
+    Util.repo.update!(%{conn.assigns.authenticated_user | authentication_tokens: tokens_left_after_delete})
     json conn, :ok
   end
 end

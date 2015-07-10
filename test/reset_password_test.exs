@@ -23,7 +23,7 @@ defmodule ResetPasswordTest do
     with_mock Mailgun.Client, [send_email: fn _, _ -> {:ok, "response"} end] do
       Registrator.changeset(%{email: @email, password: "oldpassword"})
       |> Ecto.Changeset.put_change(:confirmed_at, Ecto.DateTime.utc)
-      |> repo.insert
+      |> repo.insert!
 
       conn = call(TestRouter, :post, "/api/password_resets", %{email: @email}, @headers)
       assert conn.status == 200
@@ -37,7 +37,7 @@ defmodule ResetPasswordTest do
   test "reset password with a wrong token" do
     {_reset_token, changeset} = Registrator.changeset(%{email: @email, password: "oldpassword"})
     |> PasswordResetter.create_changeset
-    user = repo.insert changeset
+    user = repo.insert!(changeset)
 
     params = %{user_id: user.id, password_reset_token: "wrong_token", password: "newpassword"}
     conn = call(TestRouter, :post, "/api/password_resets/reset", params, @headers)
@@ -48,7 +48,7 @@ defmodule ResetPasswordTest do
   test "reset password" do
     {reset_token, changeset} = Registrator.changeset(%{email: @email, password: "oldpassword"})
     |> PasswordResetter.create_changeset
-    user = repo.insert changeset
+    user = repo.insert!(changeset)
 
     params = %{user_id: user.id, password_reset_token: reset_token, password: "newpassword"}
     conn = call(TestRouter, :post, "/api/password_resets/reset", params, @headers)

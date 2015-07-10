@@ -25,7 +25,7 @@ defmodule PhoenixTokenAuth.UsersController do
 
     if changeset.valid? do
       case Util.repo.transaction fn ->
-        user = Util.repo.insert(changeset)
+        user = Util.repo.insert!(changeset)
         Mailer.send_welcome_email(user, confirmation_token)
       end do
         {:ok, _} -> json conn, :ok
@@ -51,7 +51,7 @@ defmodule PhoenixTokenAuth.UsersController do
     changeset = Confirmator.confirmation_changeset user, params
 
     if changeset.valid? do
-        Util.repo.update(changeset)
+        Util.repo.update!(changeset)
         token = Authenticator.generate_token_for(user)
         json conn, %{token: token}
     else
