@@ -10,6 +10,7 @@ defmodule RegistratorTest do
   end
 
   @valid_params %{"password" => "secret", "email" => "unique@example.com"}
+  @valid_username_params %{"password" => "secret", "username" => "unique@example.com"}
 
   test "changeset validates presence of email" do
     changeset = Registrator.changeset(%{})
@@ -68,6 +69,18 @@ defmodule RegistratorTest do
 
     assert !changeset.valid?
     assert changeset.errors[:email] == :custom_error
+  end
+
+  test "changeset is valid with username and password" do
+    changeset = Registrator.changeset(@valid_username_params)
+    
+    assert changeset.valid?
+  end
+  test "changeset validates uniqueness of username" do
+    user = Forge.saved_user PhoenixTokenAuth.TestRepo
+    changeset = Registrator.changeset(%{"username" => user.username})
+
+    assert changeset.errors[:username] == "has already been taken"
   end
 
 end

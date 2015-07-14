@@ -10,6 +10,7 @@ defmodule LoginTest do
 
 
   @email "user@example.com"
+  @username "user@example.com"
   @password "secret"
   @headers [{"Content-Type", "application/json"}]
 
@@ -50,4 +51,29 @@ defmodule LoginTest do
     assert repo.one(UserHelper.model).authentication_tokens == [token]
   end
 
+  test "sign in with unknown username" do
+    conn = call(TestRouter, :post, "/api/sessions", %{password: @password, username: @username}, @headers)
+    assert conn.status == 401
+    assert conn.resp_body == Poison.encode!(%{errors: %{base: "Unknown email or password"}})
+  end
+
+  # test "sign in with username and wrong password" do
+  #   Registrator.changeset(%{:username => @username, :password => @password})
+  #   |> repo.insert
+  #
+  #   conn = call(TestRouter, :post, "/api/sessions", %{password: "wrong", username: @username}, @headers)
+  #   assert conn.status == 401
+  #   assert conn.resp_body == Poison.encode!(%{errors: %{base: "Unknown email or password"}})
+  # end
+  #
+  # test "sign in user with username" do
+  #   Registrator.changeset(%{:username => @username, :password => @password})
+  #   |> repo.insert
+  #
+  #   conn = call(TestRouter, :post, "/api/sessions", %{password: @password, username: @username}, @headers)
+  #   assert conn.status == 200
+  #   %{"access_token" => token, "token_type" => "bearer"} = Poison.decode!(conn.resp_body)
+  #
+  #   assert repo.one(UserHelper.model).authentication_tokens == [token]
+  # end
 end
