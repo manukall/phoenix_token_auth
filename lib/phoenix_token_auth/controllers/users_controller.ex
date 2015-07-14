@@ -32,9 +32,7 @@ defmodule PhoenixTokenAuth.Controllers.Users do
     if changeset.valid? do
       case Util.repo.transaction fn ->
         user = Util.repo.insert(changeset)
-        unless params["username"] do
-          Mailer.send_welcome_email(user, confirmation_token)
-        end
+        Mailer.send_welcome_email(user, confirmation_token)
       end do
         {:ok, _} -> json conn, :ok
       end

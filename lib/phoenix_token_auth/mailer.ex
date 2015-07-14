@@ -25,6 +25,7 @@ defmodule PhoenixTokenAuth.Mailer do
   Both config fields have to be functions returning binaries. welcome_email_subject receives the user and
   welcome_email_body the user and confirmation token.
   """
+  def send_welcome_email(user = %{email: email}, confirmation_token) when email == nil do end
   def send_welcome_email(user, confirmation_token) do
     subject = email_mod.welcome_subject(user)
     body = email_mod.welcome_body(user, confirmation_token)
