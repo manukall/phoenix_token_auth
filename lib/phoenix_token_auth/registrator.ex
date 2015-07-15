@@ -23,7 +23,7 @@ defmodule PhoenixTokenAuth.Registrator do
     |> changeset_helper
   end
 
-  def changeset_helper(changeset) do
+  defp changeset_helper(changeset) do
     changeset
     |> UserHelper.validator
     |> set_hashed_password
