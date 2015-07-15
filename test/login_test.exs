@@ -76,4 +76,17 @@ defmodule LoginTest do
 
     assert repo.one(UserHelper.model).authentication_tokens == [token]
   end
+
+test "sign in user with username and test sending email" do
+  changeset = Registrator.changeset(%{"username" => @username, "password" => @password})
+  user = repo.insert changeset
+  PhoenixTokenAuth.Mailer.send_welcome_email(user, nil)
+
+  conn = call(TestRouter, :post, "/api/sessions", %{password: @password, username: @username}, @headers)
+  assert conn.status == 200
+  %{"access_token" => token, "token_type" => "bearer"} = Poison.decode!(conn.resp_body)
+
+  assert repo.one(UserHelper.model).authentication_tokens == [token]
+end
+
 end
