@@ -10,6 +10,7 @@ config :phoenix_token_auth, PhoenixTokenAuth.TestRepo,
   username: "postgres",
   password: "postgres",
   adapter: Ecto.Adapters.Postgres,
+  pool: Ecto.Adapters.SQL.Sandbox,
   url: "ecto://localhost/phoenix_token_auth_test",
   size: 1,
   max_overflow: 0
