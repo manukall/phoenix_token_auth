@@ -21,7 +21,7 @@ defmodule ConfirmationTest do
   test "confirm user with wrong token" do
     {_, changeset} = Registrator.changeset(%{email: @email, password: @password})
     |> Confirmator.confirmation_needed_changeset
-    user = repo.insert changeset
+    user = repo.insert! changeset
 
     conn = call(TestRouter, :post, "/api/users/#{user.id}/confirm", %{confirmation_token: "wrong_token"}, @headers)
     assert conn.status == 422
@@ -31,7 +31,7 @@ defmodule ConfirmationTest do
   test "confirm a user" do
     {token, changeset} = Registrator.changeset(%{email: @email, password: @password})
     |> Confirmator.confirmation_needed_changeset
-    user = repo.insert changeset
+    user = repo.insert! changeset
 
     conn = call(TestRouter, :post, "/api/users/#{user.id}/confirm", %{confirmation_token: token}, @headers)
     assert conn.status == 200
@@ -50,13 +50,13 @@ defmodule ConfirmationTest do
   test "confirm a user's new email" do
     {token, changeset} = Registrator.changeset(%{email: @email, password: @password})
     |> Confirmator.confirmation_needed_changeset
-    user = repo.insert changeset
+    user = repo.insert! changeset
     Confirmator.confirmation_changeset(user, %{"confirmation_token" => token})
-    |> TestRepo.update
+    |> TestRepo.update!
 
     user = TestRepo.one(User)
     {token, changeset} = AccountUpdater.changeset(user, %{"email" => "new@example.com"})
-    user = TestRepo.update(changeset)
+    user = TestRepo.update!(changeset)
 
     conn = call(TestRouter, :post, "/api/users/#{user.id}/confirm", %{confirmation_token: token}, @headers)
     assert conn.status == 200

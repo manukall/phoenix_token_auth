@@ -33,7 +33,7 @@ defmodule PhoenixTokenAuth.Controllers.Account do
     |> AccountUpdater.changeset(params)
     if changeset.valid? do
       case Util.repo.transaction fn ->
-        user = Util.repo.update(changeset)
+        user = Util.repo.update!(changeset)
         if (confirmation_token != nil) do
           Mailer.send_new_email_address_email(user, confirmation_token)
         end

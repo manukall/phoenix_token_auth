@@ -17,7 +17,7 @@ defmodule UpdateAccountTest do
   @new_password "secret"
   @headers [{"Content-Type", "application/json"}]
   setup do
-    user = TestRepo.insert(%User{email: @old_email,
+    user = TestRepo.insert!(%User{email: @old_email,
                                  confirmed_at: Ecto.DateTime.utc,
                                  hashed_password: Util.crypto_provider.hashpwsalt(@old_password)})
     token = Authenticator.generate_token_for(user)
