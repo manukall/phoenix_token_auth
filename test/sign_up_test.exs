@@ -40,15 +40,15 @@ defmodule SignUpTest do
     end
   end
 
-  # test "sign up with missing email" do
-  #   conn = call(TestRouter, :post, "/api/users", %{"user" => %{"password" => @password}}, @headers)
-  #   assert conn.status == 422
-  #
-  #   errors = Poison.decode!(conn.resp_body)
-  #   |> Dict.fetch!("errors")
-  #
-  #   assert errors["email"] == "can't be blank"
-  # end
+  test "sign up with missing email" do
+    conn = call(TestRouter, :post, "/api/users", %{"user" => %{"password" => @password}}, @headers)
+    assert conn.status == 422
+
+    errors = Poison.decode!(conn.resp_body)
+    |> Dict.fetch!("errors")
+
+    assert errors["email"] == "can't be blank"
+  end
 
   test "sign up with missing password" do
     conn = call(TestRouter, :post, "/api/users", %{user: %{email: @email}}, @headers)
