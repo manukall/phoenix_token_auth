@@ -6,10 +6,10 @@ defmodule ConfirmatorTest do
 
 
   test "confirmation_needed_changeset adds the hashed token" do
-    {token, changeset} = %Ecto.Changeset{}
+    {token, user} = Forge.user()
       |> Ecto.Changeset.cast(:empty, [], [])
       |> Confirmator.confirmation_needed_changeset()
-    hashed_confirmation_token = Ecto.Changeset.get_change(changeset, :hashed_confirmation_token)
+    hashed_confirmation_token = Ecto.Changeset.get_change(user, :hashed_confirmation_token)
 
     assert crypto_provider.checkpw(token, hashed_confirmation_token)
   end
