@@ -11,16 +11,16 @@ defmodule AuthenticatorTest do
 
   test "authenticate a confirmed user" do
     user = Forge.saved_confirmed_user TestRepo
-    {:ok, _} = Authenticator.authenticate(user.email, "secret")
+    {:ok, _} = Authenticator.authenticate_by_email(user.email, "secret")
   end
 
   test "authenticate an unconfirmed user" do
     user = Forge.saved_user TestRepo
-    assert Authenticator.authenticate(user.email, "secret") == {:error, %{base: "Account not confirmed yet. Please follow the instructions we sent you by email."}}
+    assert Authenticator.authenticate_by_email(user.email, "secret") == {:error, %{base: "Account not confirmed yet. Please follow the instructions we sent you by email."}}
   end
 
   test "authenticate an unknown user" do
-    assert Authenticator.authenticate("user@example.com", "secret") == {:error, %{base: "Unknown email or password"}}
+    assert Authenticator.authenticate_by_email("user@example.com", "secret") == {:error, %{base: "Unknown email or password"}}
   end
 
 

@@ -17,7 +17,7 @@ defmodule UpdateAccountTest do
   @new_password "secret"
   @headers [{"Content-Type", "application/json"}]
   setup do
-    user = TestRepo.insert(%User{email: @old_email,
+    user = TestRepo.insert!(%User{email: @old_email,
                                  confirmed_at: Ecto.DateTime.utc,
                                  hashed_password: Util.crypto_provider.hashpwsalt(@old_password)})
     token = Authenticator.generate_token_for(user)
@@ -35,7 +35,7 @@ defmodule UpdateAccountTest do
       conn = call(TestRouter, :put, "/api/account", %{account: %{password: @new_password}}, context.headers)
       assert conn.status == 200
       assert conn.resp_body == Poison.encode!("ok")
-      {:ok, _} = Authenticator.authenticate(@old_email, @new_password)
+      {:ok, _} = Authenticator.authenticate_by_email(@old_email, @new_password)
 
       assert :meck.num_calls(Mailgun.Client, :send_email, :_, 2) == 0
     end
@@ -46,7 +46,7 @@ defmodule UpdateAccountTest do
       conn = call(TestRouter, :put, "/api/account", %{account: %{email: @new_email}}, context.headers)
       assert conn.status == 200
       assert conn.resp_body == Poison.encode!("ok")
-      {:ok, _} = Authenticator.authenticate(@old_email, @old_password)
+      {:ok, _} = Authenticator.authenticate_by_email(@old_email, @old_password)
       assert TestRepo.one(User).unconfirmed_email == @new_email
 
       mail = :meck.capture(:first, Mailgun.Client, :send_email, :_, 2)
@@ -62,7 +62,7 @@ defmodule UpdateAccountTest do
       conn = call(TestRouter, :put, "/api/account", %{account: %{email: @old_email}}, context.headers)
       assert conn.status == 200
       assert conn.resp_body == Poison.encode!("ok")
-      {:ok, _} = Authenticator.authenticate(@old_email, @old_password)
+      {:ok, _} = Authenticator.authenticate_by_email(@old_email, @old_password)
       assert TestRepo.one(User).unconfirmed_email == nil
 
       assert :meck.num_calls(Mailgun.Client, :send_email, :_, 2) == 0
@@ -77,7 +77,7 @@ defmodule UpdateAccountTest do
       conn = call(TestRouter, :put, "/api/account", %{account: %{password: @new_password}}, context.headers)
       assert conn.status == 422
       assert conn.resp_body == Poison.encode!(%{errors: %{password: :too_short}})
-      {:ok, _} = Authenticator.authenticate(@old_email, @old_password)
+      {:ok, _} = Authenticator.authenticate_by_email(@old_email, @old_password)
       assert :meck.num_calls(Mailgun.Client, :send_email, :_, 2) == 0
     end
   end

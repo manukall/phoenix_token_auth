@@ -21,13 +21,13 @@ defmodule PhoenixTokenAuth.Controllers.Users do
   Responds with status 200 and body "ok" if successfull.
   Responds with status 422 and body {errors: {field: "message"}} otherwise.
   """
-  def create(conn, %{"user" => params}) do
-    {confirmation_token, changeset} = Registrator.changeset(params)
+  def create(conn, params = %{"user" => %{"email" => email}}) when email != "" and email != nil do
+    {confirmation_token, changeset} = Registrator.changeset(params["user"])
     |> Confirmator.confirmation_needed_changeset
 
     if changeset.valid? do
       case Util.repo.transaction fn ->
-        user = Util.repo.insert(changeset)
+        user = Util.repo.insert!(changeset)
         Mailer.send_welcome_email(user, confirmation_token)
       end do
         {:ok, _} -> json conn, :ok
@@ -35,6 +35,25 @@ defmodule PhoenixTokenAuth.Controllers.Users do
     else
       Util.send_error(conn, Enum.into(changeset.errors, %{}))
     end
+  end
+
+  def create(conn, params = %{"user" => %{"username" => username}}) when username != "" and username != nil do
+    changeset = Registrator.changeset(params["user"])
+
+    if changeset.valid? do
+      case Util.repo.transaction fn ->
+        Util.repo.insert(changeset)
+      end do
+      {:ok, _} -> json conn, :ok
+      end
+    else
+      Util.send_error(conn, Enum.into(changeset.errors, %{}))
+    end
+  end
+
+  def create(conn, params) do
+    changeset = Registrator.changeset(params["user"])
+    Util.send_error(conn, Enum.into(changeset.errors, %{}))
   end
 
   @doc """
@@ -53,7 +72,7 @@ defmodule PhoenixTokenAuth.Controllers.Users do
     changeset = Confirmator.confirmation_changeset user, params
 
     if changeset.valid? do
-        Util.repo.update(changeset)
+        Util.repo.update!(changeset)
         token = Authenticator.generate_token_for(user)
         json conn, %{token: token}
     else
