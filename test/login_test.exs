@@ -32,7 +32,7 @@ defmodule LoginTest do
   test "sign in as unconfirmed user" do
     {_, changeset} = Registrator.changeset(%{"email" => @email, "password" => @password})
     |> Confirmator.confirmation_needed_changeset
-    repo.insert! changeset
+    repo.insert!(changeset)
 
     conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)
     assert conn.status == 401

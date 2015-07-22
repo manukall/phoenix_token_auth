@@ -6,8 +6,6 @@ defmodule PhoenixTokenAuth.Controllers.PasswordResets do
   alias PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.UserHelper
 
-  plug :action
-
 
   @doc """
   Create a password reset token for a user

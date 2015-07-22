@@ -4,7 +4,7 @@ defmodule Blacksmith.Config do
   end
 
   def save_all(repo, list) do
-    Enum.map(list, &repo.insert/1)
+    Enum.map(list, &repo.insert!/1)
   end
 end
 
