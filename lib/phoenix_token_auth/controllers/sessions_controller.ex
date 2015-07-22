@@ -1,4 +1,4 @@
-defmodule PhoenixTokenAuth.SessionsController do
+defmodule PhoenixTokenAuth.Controllers.Sessions do
   use Phoenix.Controller
   alias PhoenixTokenAuth.Util
   alias PhoenixTokenAuth.Authenticator
@@ -14,9 +14,16 @@ defmodule PhoenixTokenAuth.SessionsController do
   Responds with status 200 and {token: token} if credentials were correct.
   Responds with status 401 and {errors: error_message} otherwise.
   """
+  def create(conn, %{"username" => username, "password" => password}) do
+    case Authenticator.authenticate_by_username(username, password) do
+      {:ok, user} -> json conn, %{access_token: Authenticator.generate_token_for(user), token_type: "bearer", id: user.id}
+      {:error, errors} -> Util.send_error(conn, errors, 401)
+    end
+  end
+
   def create(conn, %{"email" => email, "password" => password}) do
-    case Authenticator.authenticate(email, password) do
-      {:ok, token} -> json conn, %{token: token}
+    case Authenticator.authenticate_by_email(email, password) do
+      {:ok, user} -> json conn, %{token: Authenticator.generate_token_for(user)}
       {:error, errors} -> Util.send_error(conn, errors, 401)
     end
   end

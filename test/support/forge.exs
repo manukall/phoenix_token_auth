@@ -17,6 +17,7 @@ defmodule Forge do
   register(:user,
            __struct__: PhoenixTokenAuth.User,
            email: Sequence.next(:email, &"user#{&1}@example.com"),
+           username: Sequence.next(:username, &"user#{&1}@example.com"),
            hashed_password: PhoenixTokenAuth.Util.crypto_provider.hashpwsalt("secret"),
            confirmed_at: nil
   )

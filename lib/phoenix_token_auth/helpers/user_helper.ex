@@ -10,6 +10,10 @@ defmodule PhoenixTokenAuth.UserHelper do
     query = from u in model, where: u.email == ^email
     Util.repo.one query
   end
+  def find_by_username(username) do
+    query = from u in model, where: u.username == ^username
+    Util.repo.one query
+  end
 
   def validator(changeset) do
     apply_validator(Application.get_env(:phoenix_token_auth, :user_model_validator),

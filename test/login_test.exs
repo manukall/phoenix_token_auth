@@ -5,10 +5,12 @@ defmodule LoginTest do
   alias PhoenixTokenAuth.TestRouter
   alias PhoenixTokenAuth.Registrator
   alias PhoenixTokenAuth.Confirmator
+  alias PhoenixTokenAuth.UserHelper
   import PhoenixTokenAuth.Util
 
 
   @email "user@example.com"
+  @username "user@example.com"
   @password "secret"
   @headers [{"Content-Type", "application/json"}]
 
@@ -28,7 +30,7 @@ defmodule LoginTest do
   end
 
   test "sign in as unconfirmed user" do
-    {_, changeset} = Registrator.changeset(%{email: @email, password: @password})
+    {_, changeset} = Registrator.changeset(%{"email" => @email, "password" => @password})
     |> Confirmator.confirmation_needed_changeset
     repo.insert!(changeset)
 
@@ -38,13 +40,41 @@ defmodule LoginTest do
   end
 
   test "sign in as confirmed user" do
-    Registrator.changeset(%{email: @email, password: @password})
+    Registrator.changeset(%{"email" => @email, "password" => @password})
     |> Ecto.Changeset.put_change(:confirmed_at, Ecto.DateTime.utc)
     |> repo.insert!
 
     conn = call(TestRouter, :post, "/api/sessions", %{password: @password, email: @email}, @headers)
     assert conn.status == 200
-    assert match?(%{"token" => _}, Poison.decode!(conn.resp_body))
+    %{"token" => token} = Poison.decode!(conn.resp_body)
+
+    assert repo.one(UserHelper.model).authentication_tokens == [token]
+  end
+
+  test "sign in with unknown username" do
+    conn = call(TestRouter, :post, "/api/sessions", %{password: @password, username: @username}, @headers)
+    assert conn.status == 401
+    assert conn.resp_body == Poison.encode!(%{errors: %{base: "Unknown email or password"}})
+  end
+
+  test "sign in with username and wrong password" do
+    Registrator.changeset(%{"username" => @username, "password" => @password})
+    |> repo.insert!
+
+    conn = call(TestRouter, :post, "/api/sessions", %{password: "wrong", username: @username}, @headers)
+    assert conn.status == 401
+    assert conn.resp_body == Poison.encode!(%{errors: %{base: "Unknown email or password"}})
+  end
+
+  test "sign in user with username" do
+    Registrator.changeset(%{"username" => @username, "password" => @password})
+    |> repo.insert!
+
+    conn = call(TestRouter, :post, "/api/sessions", %{password: @password, username: @username}, @headers)
+    assert conn.status == 200
+    %{"access_token" => token, "token_type" => "bearer"} = Poison.decode!(conn.resp_body)
+
+    assert repo.one(UserHelper.model).authentication_tokens == [token]
   end
 
 end
