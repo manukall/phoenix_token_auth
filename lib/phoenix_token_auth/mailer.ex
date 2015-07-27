@@ -17,8 +17,8 @@ defmodule PhoenixTokenAuth.Mailer do
                       mode: Application.get_env(:phoenix_token_auth, :mailgun_mode),
                       test_file_path: Application.get_env(:phoenix_token_auth, :mailgun_test_file_path)
 
-  def send_email_async(conf, email) do
-    Task.start fn -> send_email(conf,email) end
+  def send_email_async(email) do
+    Task.start fn -> send_email(email) end
   end
 
   @doc """
