@@ -8,7 +8,7 @@ defmodule PhoenixTokenAuth.Registrator do
   Validates that email and password are present and that email is unique.
   """
   def changeset(params = %{"username" => username}) when username != "" and username != nil do
-    Changeset.cast(struct(UserHelper.model), params, ~w(username))
+    UserHelper.model.changeset(struct(UserHelper.model), params)
     |> Changeset.validate_change(:username, &Util.presence_validator/2)
     |> Changeset.validate_unique(:username, on: Util.repo)
     |> Changeset.put_change(:hashed_confirmation_token, nil)
@@ -17,7 +17,7 @@ defmodule PhoenixTokenAuth.Registrator do
   end
 
   def changeset(params) do
-    Changeset.cast(struct(UserHelper.model), params, ~w(email))
+    UserHelper.model.changeset(struct(UserHelper.model), params)
     |> Changeset.validate_change(:email, &Util.presence_validator/2)
     |> Changeset.validate_unique(:email, on: Util.repo)
     |> changeset_helper
