@@ -57,4 +57,12 @@ defmodule PhoenixTokenAuth.User do
     field  :unconfirmed_email,           :string
     field  :authentication_tokens,       {:array, :string}, default: []
   end
+
+  @required_fields ~w(email)
+  @optional_fields ~w()
+
+  def changeset(model, params \\ :empty) do
+    model
+    |> cast(params, @required_fields, @optional_fields)
+  end
 end
