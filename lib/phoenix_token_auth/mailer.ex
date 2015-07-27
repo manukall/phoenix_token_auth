@@ -17,6 +17,9 @@ defmodule PhoenixTokenAuth.Mailer do
                       mode: Application.get_env(:phoenix_token_auth, :mailgun_mode),
                       test_file_path: Application.get_env(:phoenix_token_auth, :mailgun_test_file_path)
 
+  def send_email_async(conf, email) do
+    Task.start fn -> send_email(conf,email) end
+  end
 
   @doc """
   Sends a welcome mail to the user.
@@ -30,7 +33,7 @@ defmodule PhoenixTokenAuth.Mailer do
     body = email_mod.welcome_body(user, confirmation_token)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
 
-    {:ok, _} = send_email(to: user.email,
+    {:ok, _} = send_email_async(to: user.email,
                from: from,
                subject: subject,
                text: body)
@@ -50,7 +53,7 @@ defmodule PhoenixTokenAuth.Mailer do
     body = email_mod.password_reset_body(user, reset_token)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
 
-    {:ok, _} = send_email(to: user.email,
+    {:ok, _} = send_email_async(to: user.email,
                from: from,
                subject: subject,
                text: body)
@@ -70,7 +73,7 @@ defmodule PhoenixTokenAuth.Mailer do
     body = email_mod.new_email_address_body(user, confirmation_token)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
 
-    {:ok, _} = send_email(to: user.unconfirmed_email,
+    {:ok, _} = send_email_async(to: user.unconfirmed_email,
                from: from,
                subject: subject,
                text: body)
