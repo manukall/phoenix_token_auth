@@ -113,6 +113,11 @@ config :joken,
 * Body should be JSON encoded `{user: {email: "user@example.com", password: "secret"}}`.
 * This will send an email containing the confirmation token.
 
+### Signing up / Registering a new user with username
+* POST request to /api/users.
+* Body should be JSON encoded `{user: {username: "usernameexample", password: "secret"}}`.
+* The user will be registered and, comparing to the email implementation, already confirmed.
+
 ### Confirming a user
 * POST request to /api/users/:id/confirm
 * Body should be JSON encoded `{confirmation_token: "token form the email"}`
@@ -122,6 +127,11 @@ config :joken,
 * POST request to /api/sessions
 * Body should be JSON encoded `{email: "user@example.com", password: "secret"}`
 * Will return an authentication token as JSON: `{token: "the_token"}`
+
+### Logging in with username
+* POST request to /api/sessions
+* Body should be JSON encoded `{username: "usernameexample", password: "secret"}`
+* Will return an authentication token as JSON: `{access_token: "the_token", token_type: "bearer", id: "recordid"}`
 
 ### Requesting a protected resource
 * Add a header with key `Authorization` and value `Bearer #{token}` to the request.
