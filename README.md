@@ -6,7 +6,7 @@ Adds token authentication to Phoenix apps using Ecto.
 An example app is available at https://github.com/manukall/phoenix_token_auth_react.
 
 ## Setup
-You need to have a user model with at least the following schema:
+You need to have a user model with at least the following schema and callback:
 
 ```elixir
 defmodule MyApp.User do
@@ -21,6 +21,15 @@ defmodule MyApp.User do
     field  :unconfirmed_email,           :string
     field  :authentication_tokens,       {:array, :string}, default: []
   end
+
+  @required_fields ~w(email)
+  @optional_fields ~w()
+
+  def changeset(model, params \\ :empty) do
+    model
+    |> cast(params, @required_fields, @optional_fields)
+  end
+
 end
 ```
 
