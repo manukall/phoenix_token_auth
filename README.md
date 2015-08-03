@@ -121,7 +121,7 @@ config :joken,
 
 ### Logging in
 * POST request to /api/sessions
-* Body should be JSON encoded `{email: "user@example.com", password: "secret", role: "user_role"}`
+* Body should be JSON encoded `{email: "user@example.com", password: "secret"}`
 * Will return an authentication token as JSON: `{token: "the_token"}`
 
 ### Requesting a protected resource
