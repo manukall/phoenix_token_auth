@@ -10,14 +10,14 @@ defmodule PhoenixTokenAuth.AccountController do
 
 
   @doc """
-  Get the account data for the current user. Currently this only returns the email address.
+  Get the account data for the current user. Currently this returns the email address and role.
 
   Responds with status 200 and body {account: {email: "user@example.com"}}.
   """
   def show(conn, _params) do
     user = conn
     |> current_user
-    json conn, %{account: %{email: user.email}}
+    json conn, %{account: %{email: user.email, role: user.role}}
   end
 
   @doc """

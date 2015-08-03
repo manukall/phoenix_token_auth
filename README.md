@@ -20,6 +20,7 @@ defmodule MyApp.User do
     field  :hashed_password_reset_token, :string
     field  :unconfirmed_email,           :string
     field  :authentication_tokens,       {:array, :string}, default: []
+    field  :role                         :string
   end
 end
 ```
@@ -61,7 +62,7 @@ POST | /api/session | login, will return a token as JSON
 DELETE |  /api/session | logout, invalidated the users current authentication token
 POST | /api/password_resets | request a reset-password-email
 POST | /api/password_resets/reset | reset a password
-GET  | /api/account               | get information about the current user. at the moment this includes only the email address
+GET  | /api/account               | get information about the current user. at the moment this includes only the email address and user role
 PUT  | /api/account               | update the current users email or password
 
 Inside the controller, the authenticated user is accessible inside the connections assigns:
@@ -110,7 +111,7 @@ config :joken,
 
 ### Signing up / Registering a new user
 * POST request to /api/users.
-* Body should be JSON encoded `{user: {email: "user@example.com", password: "secret"}}`.
+* Body should be JSON encoded `{user: {email: "user@example.com", password: "secret"}, role: "user_role"}`.
 * This will send an email containing the confirmation token.
 
 ### Confirming a user
@@ -120,7 +121,7 @@ config :joken,
 
 ### Logging in
 * POST request to /api/sessions
-* Body should be JSON encoded `{email: "user@example.com", password: "secret"}`
+* Body should be JSON encoded `{email: "user@example.com", password: "secret", role: "user_role"}`
 * Will return an authentication token as JSON: `{token: "the_token"}`
 
 ### Requesting a protected resource
@@ -149,6 +150,11 @@ config :joken,
 * This will send an email containing the confirmation token.
 * The change will only be effective after the email address was confirmed.
 
+### Change a user's role
+* TODO, only for promoting to admin
+
+### Create admin user
+* TODO, this should be a mix task
 
 ## TODO:
 * Better documentation
