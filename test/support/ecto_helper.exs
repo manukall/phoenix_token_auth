@@ -30,6 +30,7 @@ defmodule UsersMigration do
       add :hashed_password_reset_token, :text
       add :unconfirmed_email,    :text
       add :authentication_tokens, {:array, :text}
+      add :role, :text
     end
 
     create index(:users, [:email], unique: true)
@@ -53,5 +54,6 @@ defmodule PhoenixTokenAuth.User do
     field  :hashed_password_reset_token, :string
     field  :unconfirmed_email,           :string
     field  :authentication_tokens,       {:array, :string}, default: []
+    field  :role,                        :string
   end
 end
