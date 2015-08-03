@@ -111,7 +111,7 @@ config :joken,
 
 ### Signing up / Registering a new user
 * POST request to /api/users.
-* Body should be JSON encoded `{user: {email: "user@example.com", password: "secret"}, role: "user_role"}`.
+* Body should be JSON encoded `{user: {email: "user@example.com", password: "secret", role: "user_role"}}`.
 * This will send an email containing the confirmation token.
 
 ### Confirming a user
