@@ -8,9 +8,10 @@ defmodule PhoenixTokenAuth.Registrator do
   Validates that email and password are present and that email is unique.
   """
   def changeset(params) do
-    Changeset.cast(struct(UserHelper.model), params, ~w(email))
+    Changeset.cast(struct(UserHelper.model), params, ~w(email), ~w(role))
     |> Changeset.validate_change(:email, &Util.presence_validator/2)
     |> Changeset.validate_unique(:email, on: Util.repo)
+    |> Changeset.validate_change(:role, &Util.presence_validator/2)
     |> UserHelper.validator
     |> set_hashed_password
   end

@@ -20,7 +20,7 @@ defmodule MyApp.User do
     field  :hashed_password_reset_token, :string
     field  :unconfirmed_email,           :string
     field  :authentication_tokens,       {:array, :string}, default: []
-    field  :role                         :string
+    field  :role,                        :string
   end
 end
 ```

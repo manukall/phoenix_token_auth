@@ -14,7 +14,7 @@ defmodule PhoenixTokenAuth.UsersController do
   Sign up as a new user.
 
   Params should be:
-      {user: {email: "user@example.com", password: "secret"}}
+      {user: {email: "user@example.com", password: "secret", role: "role_name"}}
 
   If successfull, sends a welcome email.
 

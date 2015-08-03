@@ -11,6 +11,7 @@ defmodule SignUpTest do
 
   @email "user@example.com"
   @password "secret"
+  @role "user_role"
   @headers [{"Content-Type", "application/json"}]
 
   setup do
@@ -21,13 +22,14 @@ defmodule SignUpTest do
 
   test "sign up" do
     with_mock Mailgun.Client, [send_email: fn _, _ -> {:ok, "response"} end] do
-      conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password, email: @email}}, @headers)
+      conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password, email: @email, role: @role}}, @headers)
       assert conn.status == 200
       assert conn.resp_body == Poison.encode!("ok")
 
       # fields are set in the db
       user = TestRepo.one User
       assert user.email == @email
+      assert user.role == @role
       # hashed token is set
       assert !is_nil(user.hashed_confirmation_token)
 
@@ -41,7 +43,7 @@ defmodule SignUpTest do
   end
 
   test "sign up with missing email" do
-    conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password}}, @headers)
+    conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password, role: @role}}, @headers)
     assert conn.status == 422
 
     errors = Poison.decode!(conn.resp_body)
@@ -51,7 +53,7 @@ defmodule SignUpTest do
   end
 
   test "sign up with missing password" do
-    conn = call(TestRouter, :post, "/api/users", %{user: %{email: @email}}, @headers)
+    conn = call(TestRouter, :post, "/api/users", %{user: %{email: @email, role: @role}}, @headers)
     assert conn.status == 422
 
     errors = Poison.decode!(conn.resp_body)
@@ -64,7 +66,7 @@ defmodule SignUpTest do
     Application.put_env(:phoenix_token_auth, :user_model_validator, fn changeset ->
       Ecto.Changeset.add_error(changeset, :password, :too_short)
     end)
-    conn = call(TestRouter, :post, "/api/users", %{user: %{email: @email, password: @password}}, @headers)
+    conn = call(TestRouter, :post, "/api/users", %{user: %{email: @email, password: @password, role: @role}}, @headers)
     assert conn.status == 422
 
     errors = Poison.decode!(conn.resp_body)
