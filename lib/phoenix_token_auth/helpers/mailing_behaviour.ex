@@ -3,39 +3,39 @@ defmodule PhoenixTokenAuth.MailingBehaviour do
 
 	@doc """
 	Function returning the subject of a welcome email for the given
-	user. 
+	user and connection struct.
 	"""
-	defcallback  welcome_subject(any) ::  String.t
+	defcallback  welcome_subject(any, Map.map) ::  String.t
 
 	@doc """
-	Function returning the body of a welcome email. Parameter is 
-	the User struct and the confirmation token. 
+	Function returning the body of a welcome email. Parameters are:
+	the User struct, confirmation token and connection struct.
 	"""
-	defcallback welcome_body(any, String.t) :: String.t
+	defcallback welcome_body(any, String.t, Map.map) :: String.t
 
 	@doc """
 	Function returning the subject of a password reset email for the given
-	user. 
+	user and connection struct.
 	"""
-	defcallback password_reset_subject(any) :: String.t 
+	defcallback password_reset_subject(any, Map.map) :: String.t
 
 	@doc """
-	Function returning the body of a password reset email. Parameter is 
-	the User struct and the reset token. 
+	Function returning the body of a password reset email. Parameters are:
+	the User struct, reset token and connection struct.
 	"""
-	defcallback password_reset_body(any, String.t) :: String.t
+	defcallback password_reset_body(any, String.t, Map.map) :: String.t
 
 	@doc """
 	Function returning the subject of a new email-address email for the given
-	user. 
+	user and connection struct.
 	"""
-	defcallback new_email_address_subject(any) :: String.t 
+	defcallback new_email_address_subject(any, Map.map) :: String.t
 
 	@doc """
-	Function returning the body of a new email-address email. Parameter is 
-	the User struct and the reset token. 
+	Function returning the body of a new email-address email. Parameters are:
+	the User struct, reset token and connection struct.
 	"""
-	defcallback new_email_address_body(any, String.t) :: String.t
+	defcallback new_email_address_body(any, String.t, Map.map) :: String.t
 
 
 end

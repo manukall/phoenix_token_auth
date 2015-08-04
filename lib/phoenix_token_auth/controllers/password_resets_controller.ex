@@ -25,7 +25,7 @@ defmodule PhoenixTokenAuth.Controllers.PasswordResets do
     if changeset.valid? do
       case Util.repo.transaction fn ->
         user = Util.repo.update!(changeset)
-        Mailer.send_password_reset_email(user, password_reset_token)
+        Mailer.send_password_reset_email(user, password_reset_token, conn)
       end do
         {:ok, _} -> json conn, :ok
       end
