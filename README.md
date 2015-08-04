@@ -73,6 +73,32 @@ POST | /api/password_resets/reset | reset a password
 GET  | /api/account               | get information about the current user. at the moment this includes only the email address
 PUT  | /api/account               | update the current users email or password
 
+If you want to customize the routes, instead of 
+```
+  scope "/api" do
+    pipe_through :api
+
+    PhoenixTokenAuth.mount
+  end
+```
+add
+```
+  scope "/api" do
+    pipe_through :api
+
+    post  "users",                 PhoenixTokenAuth.Controllers.Users, :create
+    post  "users/:id/confirm",     PhoenixTokenAuth.Controllers.Users, :confirm
+    post  "sessions",              PhoenixTokenAuth.Controllers.Sessions, :create
+    delete  "sessions",            PhoenixTokenAuth.Controllers.Sessions, :delete
+    post  "password_resets",       PhoenixTokenAuth.Controllers.PasswordResets, :create
+    post  "password_resets/reset", PhoenixTokenAuth.Controllers.PasswordResets, :reset
+    get   "account",               PhoenixTokenAuth.Controllers.Account, :show
+    put   "account",               PhoenixTokenAuth.Controllers.Account, :update
+  end
+```
+And customize, change names/pipeline of the routes.
+
+
 Inside the controller, the authenticated user is accessible inside the connections assigns:
 
 ```elixir
