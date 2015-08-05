@@ -43,7 +43,7 @@ defmodule SignUpTest do
   end
 
   test "sign up with missing email" do
-    conn = call(TestRouter, :post, "/api/users", %{user: %{password: @password, role: @role}}, @headers)
+    conn = call(TestRouter, :post, "/api/users", %{"user" => %{"password" => @password, role: @role}}, @headers)
     assert conn.status == 422
 
     errors = Poison.decode!(conn.resp_body)

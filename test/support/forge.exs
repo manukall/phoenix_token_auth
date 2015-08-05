@@ -1,10 +1,10 @@
 defmodule Blacksmith.Config do
   def save(repo, map) do
-    repo.insert(map)
+    repo.insert!(map)
   end
 
   def save_all(repo, list) do
-    Enum.map(list, &repo.insert/1)
+    Enum.map(list, &repo.insert!/1)
   end
 end
 
@@ -17,6 +17,7 @@ defmodule Forge do
   register(:user,
            __struct__: PhoenixTokenAuth.User,
            email: Sequence.next(:email, &"user#{&1}@example.com"),
+           username: Sequence.next(:username, &"user#{&1}@example.com"),
            hashed_password: PhoenixTokenAuth.Util.crypto_provider.hashpwsalt("secret"),
            confirmed_at: nil
   )

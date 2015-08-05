@@ -24,6 +24,7 @@ defmodule UsersMigration do
   def change do
     create table(:users) do
       add :email,    :text
+      add :username, :text
       add :hashed_password, :text
       add :hashed_confirmation_token, :text
       add :confirmed_at, :datetime
@@ -34,6 +35,7 @@ defmodule UsersMigration do
     end
 
     create index(:users, [:email], unique: true)
+    create index(:users, [:username], unique: true)
   end
 end
 
@@ -48,6 +50,7 @@ defmodule PhoenixTokenAuth.User do
 
   schema "users" do
     field  :email,                       :string
+    field  :username,                    :string
     field  :hashed_password,             :string
     field  :hashed_confirmation_token,   :string
     field  :confirmed_at,                Ecto.DateTime
@@ -55,5 +58,13 @@ defmodule PhoenixTokenAuth.User do
     field  :unconfirmed_email,           :string
     field  :authentication_tokens,       {:array, :string}, default: []
     field  :role,                        :string
+  end
+
+  @required_fields ~w()
+  @optional_fields ~w()
+
+  def changeset(model, params \\ :empty) do
+    model
+    |> cast(params, @required_fields, @optional_fields)
   end
 end
