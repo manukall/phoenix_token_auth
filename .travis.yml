@@ -6,3 +6,5 @@ otp_release:
   - 18.0
 addons:
   postgresql: '9.4'
+after_script:
+  - MIX_ENV=test mix coveralls.travis
