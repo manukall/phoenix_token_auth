@@ -4,6 +4,8 @@
 PhoenixTokenAuth
 ================
 
+[![Travis Build Status](https://img.shields.io/travis/manukall/phoenix_token_auth.svg?style=flat-square)](https://travis-ci.org/manukall/phoenix_token_auth)
+[![Coveralls Coverage](https://img.shields.io/coveralls/manukall/phoenix_token_auth.svg?style=flat-square)](https://coveralls.io/github/manukall/phoenix_token_auth)
 
 Adds token authentication to Phoenix apps using Ecto.
 
