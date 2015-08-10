@@ -1,5 +1,8 @@
+[![ProjectTalk](https://img.shields.io/badge/Project-Talk-blue.svg)](http://www.projecttalk.io/boards/manukall%2Fphoenix_token_auth?utm_source=github&utm_medium=badge&utm_campaign=gh-badge)
+
 PhoenixTokenAuth
 ================
+
 
 Adds token authentication to Phoenix apps using Ecto.
 
@@ -73,7 +76,7 @@ POST | /api/password_resets/reset | reset a password
 GET  | /api/account               | get information about the current user. at the moment this includes only the email address
 PUT  | /api/account               | update the current users email or password
 
-If you want to customize the routes, instead of 
+If you want to customize the routes, instead of
 ```
   scope "/api" do
     pipe_through :api
