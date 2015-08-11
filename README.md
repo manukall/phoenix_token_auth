@@ -1,4 +1,5 @@
-[![ProjectTalk](https://img.shields.io/badge/Project-Talk-blue.svg)](http://www.projecttalk.io/boards/manukall%2Fphoenix_token_auth?utm_source=github&utm_medium=badge&utm_campaign=gh-badge)
+[![ProjectTalk](http://www.projecttalk.io/images/gh_badge-9b3467db6d6510c2cab895f7f1bfe4f4.svg?vsn=d)]
+(http://www.projecttalk.io/boards/manukall%2Fphoenix_token_auth?utm_campaign=gh-badge&utm_medium=badge&utm_source=github)
 
 PhoenixTokenAuth
 ================
