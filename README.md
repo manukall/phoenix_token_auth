@@ -1,6 +1,6 @@
-[![ProjectTalk](http://www.projecttalk.io/images/gh_badge-9b3467db6d6510c2cab895f7f1bfe4f4.svg?vsn=d)]
+[![ProjectTalk](http://www.projecttalk.io/images/gh_badge-3e578a9f437f841de7446bab9a49d103.svg?vsn=d)]
 (http://www.projecttalk.io/boards/manukall%2Fphoenix_token_auth?utm_campaign=gh-badge&utm_medium=badge&utm_source=github)
-
+        
 PhoenixTokenAuth
 ================
 
