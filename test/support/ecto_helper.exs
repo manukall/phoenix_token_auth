@@ -33,8 +33,8 @@ defmodule UsersMigration do
       add :authentication_tokens, {:array, :text}
     end
 
-    create index(:users, [:email], unique: true)
-    create index(:users, [:username], unique: true)
+    create unique_index(:users, [:email])
+    create unique_index(:users, [:username])
   end
 end
 

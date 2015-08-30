@@ -21,7 +21,8 @@ defmodule PhoenixTokenAuth.Util do
   def presence_validator(_field, _), do: []
 
   def token_from_conn(conn) do
-    Plug.Conn.get_req_header(conn, "authorization")
+    conn
+    |> get_req_header("authorization")
     |> token_from_header
   end
   defp token_from_header(["Bearer " <> token]), do: {:ok, token}
