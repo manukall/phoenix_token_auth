@@ -1,6 +1,5 @@
 defmodule LoginTest do
   use PhoenixTokenAuth.Case
-  use Plug.Test
   import RouterHelper
   alias PhoenixTokenAuth.TestRouter
   alias PhoenixTokenAuth.Registrator

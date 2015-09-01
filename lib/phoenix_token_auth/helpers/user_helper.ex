@@ -25,7 +25,6 @@ defmodule PhoenixTokenAuth.UserHelper do
     validator.(changeset)
   end
 
-
   def persist_token(user, token) do
     alias Ecto.Changeset
     Changeset.cast(user, %{}, [])
