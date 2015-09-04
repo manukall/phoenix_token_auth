@@ -38,7 +38,7 @@ defmodule RegistratorTest do
     user = Forge.saved_user PhoenixTokenAuth.TestRepo
     changeset = Registrator.changeset(%{"email" => user.email})
 
-    assert changeset.errors[:email] == "has already been taken"
+    assert List.first(changeset.constraints)[:message] == "has already been taken"
   end
 
   test "changeset includes the hashed password if valid" do
@@ -80,7 +80,7 @@ defmodule RegistratorTest do
     user = Forge.saved_user PhoenixTokenAuth.TestRepo
     changeset = Registrator.changeset(%{"username" => user.username})
 
-    assert changeset.errors[:username] == "has already been taken"
+    assert List.first(changeset.constraints)[:message] == "has already been taken"
   end
 
 end
