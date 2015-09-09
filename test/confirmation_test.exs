@@ -14,7 +14,7 @@ defmodule ConfirmationTest do
 
   @email "user@example.com"
   @password "secret"
-  @headers [{"Content-Type", "application/json"}]
+  @headers [{"content-type", "application/json"}]
 
 
 

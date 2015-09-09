@@ -11,7 +11,7 @@ defmodule SignUpTest do
 
   @email "user@example.com"
   @password "secret"
-  @headers [{"Content-Type", "application/json"}, {"language", "en"}]
+  @headers [{"content-type", "application/json"}, {"language", "en"}]
 
   setup do
     on_exit fn ->

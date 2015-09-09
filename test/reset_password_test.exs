@@ -11,7 +11,7 @@ defmodule ResetPasswordTest do
 
 
   @email "user@example.com"
-  @headers [{"Content-Type", "application/json"}]
+  @headers [{"content-type", "application/json"}]
 
   test "request a reset token for an unknown email" do
     conn = call(TestRouter, :post, "/api/password_resets", %{email: @email}, @headers)

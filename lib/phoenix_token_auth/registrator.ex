@@ -11,7 +11,7 @@ defmodule PhoenixTokenAuth.Registrator do
     UserHelper.model.changeset(struct(UserHelper.model), params)
     |> Changeset.cast(params, ~w(username))
     |> Changeset.validate_change(:username, &Util.presence_validator/2)
-    |> Changeset.validate_unique(:username, on: Util.repo)
+    |> Changeset.unique_constraint(:username)
     |> Changeset.put_change(:hashed_confirmation_token, nil)
     |> Changeset.put_change(:confirmed_at, Ecto.DateTime.utc)
     |> changeset_helper
@@ -21,7 +21,7 @@ defmodule PhoenixTokenAuth.Registrator do
     UserHelper.model.changeset(struct(UserHelper.model), params)
     |> Changeset.cast(params, ~w(email))
     |> Changeset.validate_change(:email, &Util.presence_validator/2)
-    |> Changeset.validate_unique(:email, on: Util.repo)
+    |> Changeset.unique_constraint(:email)
     |> changeset_helper
   end
 
