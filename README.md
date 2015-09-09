@@ -1,6 +1,6 @@
 [![ProjectTalk](http://www.projecttalk.io/images/gh_badge-3e578a9f437f841de7446bab9a49d103.svg?vsn=d)]
 (http://www.projecttalk.io/boards/manukall%2Fphoenix_token_auth?utm_campaign=gh-badge&utm_medium=badge&utm_source=github)
-        
+
 PhoenixTokenAuth
 ================
 
@@ -17,7 +17,7 @@ defmodule MyApp.User do
   use Ecto.Model
 
   schema "users" do
-    field  :email,                       :string
+    field  :email,                       :string     # or :username
     field  :hashed_password,             :string
     field  :hashed_confirmation_token,   :string
     field  :confirmed_at,                Ecto.DateTime
@@ -36,6 +36,8 @@ defmodule MyApp.User do
 
 end
 ```
+
+Make sure that you have uniqueness constraints on the email or username columns.
 
 Then add PhoenixTokenAuth to your Phoenix router:
 
