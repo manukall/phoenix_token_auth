@@ -60,7 +60,7 @@ defmodule MyApp.Router do
     pipe_through :authenticated
     pipe_through :api
 
-    resources: messages, MessagesController
+    resources "/messages", MessagesController
   end
 end
 ```
