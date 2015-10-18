@@ -10,7 +10,8 @@ defmodule PhoenixTokenAuth.Mixfile do
      package: package,
      description: description,
      source_url: @repo_url,
-     deps: deps]
+     deps: deps,
+     test_coverage: [tool: ExCoveralls]]
   end
 
   # Configuration for the OTP application
@@ -66,6 +67,7 @@ defmodule PhoenixTokenAuth.Mixfile do
         # TESTING
         {:mock, "~> 0.1.0", only: :test},
         {:blacksmith, git: "git://github.com/batate/blacksmith.git", only: :test},
+        {:excoveralls, "~> 0.3.11", only: :test}
     ]
   end
 end
