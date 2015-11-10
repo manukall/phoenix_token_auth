@@ -21,7 +21,8 @@ defmodule PhoenixTokenAuth.Mixfile do
   end
 
   defp applications(:test), do: applications(:all) ++ [:blacksmith]
-  defp applications(_all),  do: [:logger]
+  defp applications(_all), do: [:comeonin, :joken, :poison, :secure_random,
+    :mailgun, :timex]
 
   defp package do
     [
