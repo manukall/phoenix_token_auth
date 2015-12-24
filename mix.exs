@@ -6,7 +6,7 @@ defmodule PhoenixTokenAuth.Mixfile do
   def project do
     [app: :phoenix_token_auth,
      version: "0.3.0",
-     elixir: "~> 1.0",
+     elixir: "~> 1.1.0",
      package: package,
      description: description,
      source_url: @repo_url,
@@ -21,7 +21,8 @@ defmodule PhoenixTokenAuth.Mixfile do
   end
 
   defp applications(:test), do: applications(:all) ++ [:blacksmith]
-  defp applications(_all),  do: [:logger]
+  defp applications(_all), do: [:comeonin, :joken, :poison, :secure_random,
+    :mailgun, :timex]
 
   defp package do
     [
@@ -51,15 +52,15 @@ defmodule PhoenixTokenAuth.Mixfile do
   defp deps do
     [
         {:cowboy, "~> 1.0.0"},
-        {:phoenix, "~> 1.0.0"},
-        {:ecto, "~> 1.0.0"},
-        {:comeonin, "~> 0.10.0"},
+        {:phoenix, "~> 1.0.2"},
+        {:ecto, "~> 1.0.3"},
+        {:comeonin, "~> 2.0.0"},
         {:postgrex, ">= 0.6.0"},
         {:joken, "~> 0.13.1"},
         {:poison, "~> 1.4.0"},
         {:secure_random, "~> 0.1.0"},
         {:mailgun, "~> 0.1.1"},
-        {:timex, "~> 0.16.2"},
+        {:timex, "~> 0.19.5"},
         # DEV
         {:earmark, "~> 0.1.0", only: :dev},
         {:ex_doc, "~> 0.7.0", only: :dev},
