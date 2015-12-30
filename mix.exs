@@ -25,7 +25,7 @@ defmodule PhoenixTokenAuth.Mixfile do
 
   defp package do
     [
-        contributors: ["Manuel Kallenbach"],
+        maintainers: ["Manuel Kallenbach"],
         licenses: ["MIT"],
         links: %{"GitHub" => @repo_url,
                 "Phoenix" => "https://github.com/phoenixframework/phoenix"}
