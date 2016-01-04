@@ -31,7 +31,7 @@ defmodule PhoenixTokenAuth.Registrator do
     |> set_hashed_password
   end
 
-  def set_hashed_password(changeset = %{errors: [_]}), do: changeset
+  def set_hashed_password(changeset = %{errors: [_ | _]}), do: changeset
   def set_hashed_password(changeset = %{params: %{"password" => password}}) when password != "" and password != nil do
     hashed_password = Util.crypto_provider.hashpwsalt(password)
 
