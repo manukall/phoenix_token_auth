@@ -1,6 +1,9 @@
 [![ProjectTalk](http://www.projecttalk.io/images/gh_badge-3e578a9f437f841de7446bab9a49d103.svg?vsn=d)]
 (http://www.projecttalk.io/boards/manukall%2Fphoenix_token_auth?utm_campaign=gh-badge&utm_medium=badge&utm_source=github)
 
+# PhoenixTokenAuth is not really maintained. I do not recommend starting a new project with it.
+I'm not actively using this project at the moment. I also implmemented most of it when I just started with Elixir, so the code is not exactly great. If you want to use it, be prepared to fork the project and invest some work.
+
 PhoenixTokenAuth
 ================
 
