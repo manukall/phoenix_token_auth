@@ -9,7 +9,8 @@ defmodule RegistratorTest do
     end
   end
 
-  @valid_params %{"password" => "secret", "email" => "unique@example.com"}
+  @valid_params %{"password" => "secret", "email" => "unique@example.com", "role" => "role_name"}
+  @valid_username_params %{"password" => "secret", "username" => "unique@example.com", "role" => "role_name"}
 
   test "changeset validates presence of email" do
     changeset = Registrator.changeset(%{})
@@ -33,6 +34,20 @@ defmodule RegistratorTest do
     assert changeset.errors[:password] == "can't be blank"
   end
 
+  test "changeset validates prescence of role assignment" do
+    # Why are these two tests screwy?
+    # changeset = Registrator.changeset(%{"email" => "user@example.com"})
+    # assert changeset.errors[:role] == "can't be blank"
+
+    changeset = Registrator.changeset(%{"email" => "user@example.com", "password" => "secret", "role" => ""})
+    assert changeset.errors[:role] == "can't be blank"
+
+    # changeset = Registrator.changeset(%{"email" => "user@example.com", "password" => "secret", "role" => nil})
+    # IO.inspect changeset
+    # assert changeset.errors[:role] == "can't be blank"
+
+  end
+
   test "changeset validates uniqueness of email" do
     user = Forge.saved_user PhoenixTokenAuth.TestRepo
     changeset = Registrator.changeset(%{"email" => user.email})
@@ -54,7 +69,7 @@ defmodule RegistratorTest do
     assert hashed_pw == nil
   end
 
-  test "changeset is valid with email and password" do
+  test "changeset is valid with email, password, and role" do
     changeset = Registrator.changeset(@valid_params)
 
     assert changeset.valid?
@@ -68,6 +83,18 @@ defmodule RegistratorTest do
 
     assert !changeset.valid?
     assert changeset.errors[:email] == :custom_error
+  end
+
+  test "changeset is valid with username and password" do
+    changeset = Registrator.changeset(@valid_username_params)
+
+    assert changeset.valid?
+  end
+  test "changeset validates uniqueness of username" do
+    user = Forge.saved_user PhoenixTokenAuth.TestRepo
+    changeset = Registrator.changeset(%{"username" => user.username})
+
+    assert changeset.errors[:username] == "has already been taken"
   end
 
 end

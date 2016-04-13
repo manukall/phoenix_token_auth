@@ -6,7 +6,7 @@ Adds token authentication to Phoenix apps using Ecto.
 An example app is available at https://github.com/manukall/phoenix_token_auth_react.
 
 ## Setup
-You need to have a user model with at least the following schema:
+You need to have a user model with at least the following schema and callback:
 
 ```elixir
 defmodule MyApp.User do
@@ -20,7 +20,17 @@ defmodule MyApp.User do
     field  :hashed_password_reset_token, :string
     field  :unconfirmed_email,           :string
     field  :authentication_tokens,       {:array, :string}, default: []
+    field  :role,                        :string
   end
+
+  @required_fields ~w(email)
+  @optional_fields ~w()
+
+  def changeset(model, params \\ :empty) do
+    model
+    |> cast(params, @required_fields, @optional_fields)
+  end
+
 end
 ```
 
@@ -61,8 +71,34 @@ POST | /api/session | login, will return a token as JSON
 DELETE |  /api/session | logout, invalidated the users current authentication token
 POST | /api/password_resets | request a reset-password-email
 POST | /api/password_resets/reset | reset a password
-GET  | /api/account               | get information about the current user. at the moment this includes only the email address
+GET  | /api/account               | get information about the current user. at the moment this includes only the email address and user role
 PUT  | /api/account               | update the current users email or password
+
+If you want to customize the routes, instead of 
+```
+  scope "/api" do
+    pipe_through :api
+
+    PhoenixTokenAuth.mount
+  end
+```
+add
+```
+  scope "/api" do
+    pipe_through :api
+
+    post  "users",                 PhoenixTokenAuth.Controllers.Users, :create
+    post  "users/:id/confirm",     PhoenixTokenAuth.Controllers.Users, :confirm
+    post  "sessions",              PhoenixTokenAuth.Controllers.Sessions, :create
+    delete  "sessions",            PhoenixTokenAuth.Controllers.Sessions, :delete
+    post  "password_resets",       PhoenixTokenAuth.Controllers.PasswordResets, :create
+    post  "password_resets/reset", PhoenixTokenAuth.Controllers.PasswordResets, :reset
+    get   "account",               PhoenixTokenAuth.Controllers.Account, :show
+    put   "account",               PhoenixTokenAuth.Controllers.Account, :update
+  end
+```
+And customize, change names/pipeline of the routes.
+
 
 Inside the controller, the authenticated user is accessible inside the connections assigns:
 
@@ -110,8 +146,13 @@ config :joken,
 
 ### Signing up / Registering a new user
 * POST request to /api/users.
-* Body should be JSON encoded `{user: {email: "user@example.com", password: "secret"}}`.
+* Body should be JSON encoded `{user: {email: "user@example.com", password: "secret", role: "user_role"}}`.
 * This will send an email containing the confirmation token.
+
+### Signing up / Registering a new user with username
+* POST request to /api/users.
+* Body should be JSON encoded `{user: {username: "usernameexample", password: "secret"}}`.
+* The user will be registered and, comparing to the email implementation, already confirmed.
 
 ### Confirming a user
 * POST request to /api/users/:id/confirm
@@ -122,6 +163,11 @@ config :joken,
 * POST request to /api/sessions
 * Body should be JSON encoded `{email: "user@example.com", password: "secret"}`
 * Will return an authentication token as JSON: `{token: "the_token"}`
+
+### Logging in with username
+* POST request to /api/sessions
+* Body should be JSON encoded `{username: "usernameexample", password: "secret"}`
+* Will return an authentication token as JSON: `{access_token: "the_token", token_type: "bearer", id: "recordid"}`
 
 ### Requesting a protected resource
 * Add a header with key `Authorization` and value `Bearer #{token}` to the request.
@@ -149,6 +195,11 @@ config :joken,
 * This will send an email containing the confirmation token.
 * The change will only be effective after the email address was confirmed.
 
+### Change a user's role
+* TODO, only for promoting to admin
+
+### Create admin user
+* TODO, this should be a mix task
 
 ## TODO:
 * Better documentation

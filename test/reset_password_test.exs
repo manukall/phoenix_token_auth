@@ -21,11 +21,12 @@ defmodule ResetPasswordTest do
 
   test "request a reset token" do
     with_mock Mailgun.Client, [send_email: fn _, _ -> {:ok, "response"} end] do
-      Registrator.changeset(%{email: @email, password: "oldpassword"})
+      Registrator.changeset(%{"email" => @email, "password" => "oldpassword"})
       |> Ecto.Changeset.put_change(:confirmed_at, Ecto.DateTime.utc)
       |> repo.insert!
 
       conn = call(TestRouter, :post, "/api/password_resets", %{email: @email}, @headers)
+
       assert conn.status == 200
       assert Poison.decode!(conn.resp_body) == "ok"
 
