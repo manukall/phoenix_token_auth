@@ -7,6 +7,7 @@ defmodule PhoenixTokenAuth.UserHelper do
   end
 
   def find_by_email(email) do
+    email = String.downcase(email)
     query = from u in model, where: u.email == ^email
     Util.repo.one query
   end
