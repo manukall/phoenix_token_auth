@@ -52,7 +52,7 @@ Returns:
     token
   end
   defp generate_unique_token_for(user) do
-    {:ok, token} = Map.take(user, [:id])
+    {:ok, token} = Map.take(user, [:id, :role])
     |> Map.merge(%{exp: token_expiry_secs})
     |> Map.merge(%{token_id: SecureRandom.base64(24)})
     |> Joken.encode()
