@@ -1,5 +1,12 @@
+[![ProjectTalk](http://www.projecttalk.io/images/gh_badge-3e578a9f437f841de7446bab9a49d103.svg?vsn=d)]
+(http://www.projecttalk.io/boards/manukall%2Fphoenix_token_auth?utm_campaign=gh-badge&utm_medium=badge&utm_source=github)
+
+# PhoenixTokenAuth is not really maintained. I do not recommend starting a new project with it.
+I'm not actively using this project at the moment. I also implmemented most of it when I just started with Elixir, so the code is not exactly great. If you want to use it, be prepared to fork the project and invest some work.
+
 PhoenixTokenAuth
 ================
+
 
 Adds token authentication to Phoenix apps using Ecto.
 
@@ -13,7 +20,7 @@ defmodule MyApp.User do
   use Ecto.Model
 
   schema "users" do
-    field  :email,                       :string
+    field  :email,                       :string     # or :username
     field  :hashed_password,             :string
     field  :hashed_confirmation_token,   :string
     field  :confirmed_at,                Ecto.DateTime
@@ -33,6 +40,8 @@ defmodule MyApp.User do
 
 end
 ```
+
+Make sure that you have uniqueness constraints on the email or username columns.
 
 Then add PhoenixTokenAuth to your Phoenix router:
 
@@ -55,7 +64,7 @@ defmodule MyApp.Router do
     pipe_through :authenticated
     pipe_through :api
 
-    resources: messages, MessagesController
+    resources "/messages", MessagesController
   end
 end
 ```
@@ -74,7 +83,7 @@ POST | /api/password_resets/reset | reset a password
 GET  | /api/account               | get information about the current user. at the moment this includes only the email address and user role
 PUT  | /api/account               | update the current users email or password
 
-If you want to customize the routes, instead of 
+If you want to customize the routes, instead of
 ```
   scope "/api" do
     pipe_through :api
@@ -116,10 +125,10 @@ config :phoenix_token_auth,
   user_model: Myapp.User,                                                              # ecto model used for authentication
   repo: Myapp.Repo,                                                                    # ecto repo
   crypto_provider: Comeonin.Bcrypt,                                                    # crypto provider for hashing passwords/tokens. see http://hexdocs.pm/comeonin/
-  token_validity_in_minutes: 7 * 24 * 60                                               # minutes from login until a token expires
+  token_validity_in_minutes: 7 * 24 * 60,                                              # minutes from login until a token expires
   email_sender: "myapp@example.com",                                                   # sender address of emails sent by the app
-  emailing_module: MyApp.EmailConstructor                                              # module implementing the `PhoenixTokenAuth.MailingBehaviour` for generating emails
-  mailgun_domain: "example.com"                                                        # domain of your mailgun account
+  emailing_module: MyApp.EmailConstructor,                                             # module implementing the `PhoenixTokenAuth.MailingBehaviour` for generating emails
+  mailgun_domain: "example.com",                                                       # domain of your mailgun account
   mailgun_key: "secret",                                                               # secret key of your mailgun account
   user_model_validator: {MyApp.Model, :user_validator}                                 # function receiving and returning the changeset for a user on registration and when updating the account. This is the place to run custom validations.
 ```

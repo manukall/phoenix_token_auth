@@ -25,9 +25,9 @@ defmodule PhoenixTokenAuth.Mailer do
   Both config fields have to be functions returning binaries. welcome_email_subject receives the user and
   welcome_email_body the user and confirmation token.
   """
-  def send_welcome_email(user, confirmation_token) do
-    subject = email_mod.welcome_subject(user)
-    body = email_mod.welcome_body(user, confirmation_token)
+  def send_welcome_email(user, confirmation_token, conn \\ nil) do
+    subject = email_mod.welcome_subject(user, conn)
+    body = email_mod.welcome_body(user, confirmation_token, conn)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
 
     {:ok, _} = send_email(to: user.email,
@@ -45,9 +45,9 @@ defmodule PhoenixTokenAuth.Mailer do
   Both config fields have to be functions returning binaries. password_reset_email_subject receives the user and
   password_reset_email_body the user and reset token.
   """
-  def send_password_reset_email(user, reset_token) do
-    subject = email_mod.password_reset_subject(user)
-    body = email_mod.password_reset_body(user, reset_token)
+  def send_password_reset_email(user, reset_token, conn \\ nil) do
+    subject = email_mod.password_reset_subject(user, conn)
+    body = email_mod.password_reset_body(user, reset_token, conn)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
 
     {:ok, _} = send_email(to: user.email,
@@ -65,9 +65,9 @@ defmodule PhoenixTokenAuth.Mailer do
   Both config fields have to be functions returning binaries. new_email_address_email_subject receives the user and
   new_email_address_email_body the user and confirmation token.
   """
-  def send_new_email_address_email(user, confirmation_token) do
-    subject = email_mod.new_email_address_subject(user)
-    body = email_mod.new_email_address_body(user, confirmation_token)
+  def send_new_email_address_email(user, confirmation_token, conn \\ nil) do
+    subject = email_mod.new_email_address_subject(user, conn)
+    body = email_mod.new_email_address_body(user, confirmation_token, conn)
     from = Application.get_env(:phoenix_token_auth, :email_sender)
 
     {:ok, _} = send_email(to: user.unconfirmed_email,

@@ -15,7 +15,7 @@ defmodule UpdateAccountTest do
   @new_email "user@example.com"
   @old_password "old_secret"
   @new_password "secret"
-  @headers [{"Content-Type", "application/json"}]
+  @headers [{"content-type", "application/json"}]
   setup do
     user = TestRepo.insert!(%User{email: @old_email,
                                  confirmed_at: Ecto.DateTime.utc,
